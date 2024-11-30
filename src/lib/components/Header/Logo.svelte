@@ -29,36 +29,39 @@
 					class="front"
 				/>
 			</g>
+			<circle cx="57.5" cy="46" r="80" stroke="var(--accent)" stroke-width="8" />
 		</g>
 	</svg>
 </div>
 
 <style lang="scss">
 	.logo {
-		width: 3rem;
+		width: 1.5rem;
 
 		transition: 0.25s ease-out;
-		color: var(--fg-a);
-		--accent: var(--fg-a);
-
+		color: var(--fg-d);
+		--accent: var(--bg-c);
+		
 		&.active {
+			color: var(--fg-a);
 			--accent: var(--theme-a);
 
 			path {
 				stroke-width: 4;
 			}
 		}
-	}
 
-	:global(:root[theme='light'] .logo) {
-		color: var(--bg-b);
-
-		&:not(.active) {
-			--accent: var(--fg-a);
+		&:hover {
+			--accent: var(--fg-d);
 		}
 	}
 
-	path {
+	svg {
+		overflow: visible;
+	}
+
+	path,
+	circle {
 		transition: 0.25s ease-out;
 	}
 </style>

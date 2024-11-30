@@ -1,5 +1,5 @@
 <script lang="ts">
-	import HomeIcon from '$lib/components/Header/HomeIcon.svelte'
+	import HomeIcon from '$lib/components/Header/Logo.svelte'
 	import { device } from '$lib/utils/device.svelte'
 	import ThemeSwitch from '../ThemeSwitch.svelte'
 	import { page } from '$app/stores'
@@ -25,7 +25,7 @@
 <style lang="scss">
 	header {
 		position: relative;
-		
+
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
