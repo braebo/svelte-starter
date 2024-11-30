@@ -1,3 +1,4 @@
+import { Logger } from './logger/logger'
 import { DEV } from 'esm-env'
 
 class Device {
@@ -7,15 +8,18 @@ class Device {
 	 */
 	public breakpoint = $state(1000)
 	/** `window.innerWidth` */
-	public width = $state(100)
+	public width = $state(900)
 	/** `window.innerHeight` */
-	public height = $state(100)
+	public height = $state(900)
 	/** true if `window.innerWidth` < {@link breakpoint|`breakpoint`} */
 	public mobile = $derived.by(() => this.width < this.breakpoint)
 	/**  `window.scrollY` */
 	public scrollY = $state(0)
 	/** Client coordinates of the mouse or touch point. */
 	public mouse = $state({ x: 0, y: 0 })
+
+	#log?: Logger
+	#initialized = false
 
 	constructor(
 		/**
@@ -24,26 +28,22 @@ class Device {
 		 */
 		breakpoint?: number,
 	) {
-		if (breakpoint) this.breakpoint = breakpoint
-	}
+		if (!globalThis.window || this.#initialized) return
+		this.#initialized = true
 
-	public init = (): void => {
-		if (!globalThis.window) {
-			if (DEV) console.error('device.svelte - Error: Cannot initialize device on server.')
-			return
-		}
+		if (breakpoint) this.breakpoint = breakpoint
 
 		this.#onResize()
 		this.#onScroll()
 
-		removeEventListener('resize', this.#onResize)
 		addEventListener('resize', this.#onResize)
-
-		removeEventListener('scroll', this.#onScroll)
 		addEventListener('scroll', this.#onScroll)
-
-		removeEventListener('pointermove', this.#onPointerMove)
 		addEventListener('pointermove', this.#onPointerMove)
+
+		if (DEV) {
+			this.#log = new Logger('Device', { fg: 'plum' })
+			this.#log.fn('init').info(this)
+		}
 	}
 
 	#onResize = (): void => {

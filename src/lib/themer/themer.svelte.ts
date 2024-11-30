@@ -1,9 +1,10 @@
 import type { Theme } from './themer.types'
 
+import { dim, gr } from '$lib/utils/logger/logger-colors'
 import { Logger } from '$lib/utils/logger/logger'
 import { vanilla } from './themes/themes'
 import { parse } from 'cookie'
-import { dim, gr } from '$lib/utils/logger/logger-colors'
+import { DEV } from 'esm-env'
 
 type Preference = 'dark' | 'light' | 'system'
 
@@ -18,11 +19,12 @@ interface ThemerOptions {
 	defaultMode: 'light' | 'dark' | 'system'
 
 	/**
-	 * The key to use in local/cookie storage.  If `false`, storage will be
-	 * disabled.
+	 * The key to use in local/cookie storage.
+	 *
+	 * To disable storage, set this to `false`.
 	 * @default 'themer-mode'
 	 */
-	storage: string | false
+	key: string | false
 }
 
 /**
@@ -30,11 +32,17 @@ interface ThemerOptions {
  */
 class Themer {
 	activeTheme = $state<Theme>(vanilla)
+
 	#preference = $state<'light' | 'dark' | 'system'>('system')
+
 	mode = $derived.by(() => this.#resolveMode())
+
 	colors = $derived.by(() =>
-		Object.fromEntries(Object.entries(this.activeTheme.colors).map(([k, v]) => [k, this.#resolveLightDark(v)])),
+		Object.fromEntries(
+			Object.entries(this.activeTheme.colors).map(([k, v]) => [k, this.#resolveLightDark(v)]),
+		),
 	)
+
 	themes = { vanilla } satisfies Record<string, Theme>
 
 	css?: CSSStyleSheet
@@ -42,11 +50,12 @@ class Themer {
 	dispose?: () => void
 
 	/**
-	 * Whether storage is enabled for the theme preference.
+	 * Whether local/cookie storage is enabled for the theme preference.
 	 */
-	#storage: boolean
+	#storage!: boolean
 	/**
 	 * Whether `init` has been called at least once.
+	 * @internal
 	 */
 	#initialized = false
 	/**
@@ -58,42 +67,22 @@ class Themer {
 	 */
 	#prefersLight?: MediaQueryList
 
-	#logger = new Logger('Themer', { fg: 'slategray' })
+	#logger?: Logger
 
 	constructor(options?: ThemerOptions) {
-		this.#storage = options?.storage !== false
+		if (!globalThis.window) return
+		if (DEV) {
+			this.#logger = new Logger('Themer', { fg: 'slategray' })
+			this.#logger?.fn('init')
+		}
+
+		this.#storage = options?.key !== false
 
 		this.preference = this.#resolveStorage(options?.defaultMode ?? 'dark')
 
-		// if (globalThis.window) {
-		// 	this.init()
-		// }
-
-		// this.dispose = $effect.root(() => {
-		// 	$effect(() => {
-		// 		this.applyTheme()
-		// 	})
-		// })
-	}
-
-	get preference() {
-		return this.#preference
-	}
-	set preference(pref: 'light' | 'dark' | 'system') {
-		this.#preference = pref
-		this.#logger.info(gr('set preference:'), pref)
-		this.applyTheme()
-	}
-
-	/**
-	 * Runs once automatically if the `window` object is available, but can be called manually if
-	 * needed without consequence.
-	 */
-	init() {
 		if (!globalThis.window) {
 			throw new Error("Can't initialize Themer on the server.")
 		}
-		this.#logger.info(Logger.fn('init'))
 
 		if (this.#initialized) return
 		this.#initialized = true
@@ -112,6 +101,22 @@ class Themer {
 		this.applyTheme()
 	}
 
+	get preference() {
+		return this.#preference
+	}
+
+	set preference(pref: 'light' | 'dark' | 'system') {
+		this.#preference = pref
+		this.#logger?.info(gr('set preference:'), pref)
+		this.applyTheme()
+	}
+
+	/**
+	 * Runs once automatically if the `window` object is available, but can be called manually if
+	 * needed without consequence.
+	 */
+	init() {}
+
 	/**
 	 * Applies the active theme variables to the themer's adopted style sheet, and sets the root
 	 * `color-scheme` style property to the current mode.  This method is called automatically
@@ -119,8 +124,8 @@ class Themer {
 	 */
 	applyTheme = () => {
 		if (!this.css) return
-		this.#logger.group('applyTheme')
-		this.#logger.info({ preference: this.preference, mode: this.mode })
+		this.#logger?.group('applyTheme')
+		this.#logger?.info({ preference: this.preference, mode: this.mode })
 
 		let str = ':root {\n'
 		for (const [k, v] of Object.entries(this.activeTheme.colors)) {
@@ -136,15 +141,15 @@ class Themer {
 
 		if (this.#storage) {
 			globalThis.localStorage?.setItem(this.#storageKey, this.preference)
-			this.#logger.info(gr('saved preference to localStorage'))
+			this.#logger?.info(gr('saved preference to localStorage'))
 
 			if (typeof document !== 'undefined') {
 				document.cookie = `${this.#storageKey}=${this.mode}; path=/;`
-				this.#logger.info(gr('saved mode to cookie'))
+				this.#logger?.info(gr('saved mode to cookie'))
 			}
 		}
 
-		this.#logger.groupEnd()
+		this.#logger?.groupEnd()
 	}
 
 	/**
@@ -186,7 +191,11 @@ class Themer {
 	}
 
 	#resolveMode(preference = this.#preference): 'light' | 'dark' {
-		return preference === 'system' ? (this.#prefersLight?.matches ? 'light' : 'dark') : preference
+		return preference === 'system'
+			? this.#prefersLight?.matches
+				? 'light'
+				: 'dark'
+			: preference
 	}
 
 	#onSystemChange = (_: MediaQueryListEvent) => {

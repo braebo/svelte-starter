@@ -152,6 +152,10 @@ export class Logger {
 		return this
 	}
 
+	fn(str: string, ...args: unknown[]) {
+		return this.info(Logger.fn(str, ...args))
+	}
+
 	warn(...args: unknown[]) {
 		if (this.#log_warn) this.log(y('⚠'), ...args)
 		return this
