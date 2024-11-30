@@ -1,15 +1,27 @@
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte'
 import mdsvexConfig from './mdsvex.config.mjs'
 import adapter from '@sveltejs/adapter-auto'
-import shiki from './shiki.config.mjs'
 import { mdsvex } from 'mdsvex'
+
+import { createShikiLogger, processCodeblockSync, getOrLoadOpts } from '@samplekit/preprocess-shiki'
+const opts = await getOrLoadOpts()
+const preprocessorRoot = `${import.meta.dirname}/src/routes/`
+const formatFilename = (/** @type {string} */ filename) => filename.replace(preprocessorRoot, '')
 
 const ignoreWarnings = ['element_invalid_self_closing_tag']
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
 	extensions: ['.svelte', ...mdsvexConfig.extensions],
-	preprocess: [shiki(), vitePreprocess({ script: true }), mdsvex(mdsvexConfig)],
+	preprocess: [
+		processCodeblockSync({
+			include: (filename) => filename.startsWith(preprocessorRoot),
+			logger: createShikiLogger(formatFilename),
+			opts,
+		}),
+		vitePreprocess({ script: true }),
+		mdsvex(mdsvexConfig),
+	],
 	kit: { adapter: adapter() },
 	vitePlugin: {
 		inspector: {

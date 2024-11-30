@@ -55,13 +55,36 @@
 				</ul>
 			</li>
 		</ul>
+
+		<button>button</button>
+
+		<code>code</code>
+
+		<!-- shiki-start
+```ts
+function syntaxHighlighting(): true {
+	return true
+}
+
+console.log('some really long string that would usually cause a horizontal scroll when it overflows on the x axis because reasons');
+```
+		shiki-end -->
 	</section>
 
-	<section style:gap="1.5rem" in:fly|global={{ ...IN, y: 7.5, duration: 300, delay: 150 }} out:fade|global={OUT}>
+	<section
+		style:gap="1.5rem"
+		in:fly|global={{ ...IN, y: 7.5, duration: 300, delay: 150 }}
+		out:fade|global={OUT}
+	>
 		<!-- prettier-ignore -->
 		<p>
 			<!-- svelte-ignore a11y_invalid_attribute -->
 			Paragraph canary danced beneath <a href="">azure skies</a>, while marble fountains sparkled with untold mysteries. Velvet shadows crept along ancient walls, whispering secrets to passing travelers who dared not linger.
+		</p>
+
+		<!-- prettier-ignore -->
+		<p>
+			Nor is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but occasionally circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure?
 		</p>
 
 		<!-- svelte-ignore a11y_invalid_attribute -->
@@ -69,30 +92,13 @@
 		<blockquote> Blockquote golden leaves tumbled through forgotten courtyards, each one carrying <a href="">fragments of memories</a> long since scattered to the winds.</blockquote>
 
 		<!-- svelte-ignore a11y_invalid_attribute -->
-		<a href="">https://some.really-long-link-that-would-normally-cause-horizontal-overflow</a>
-
-		<pre><code>&lt;pre&gt;
-  &lt;code&gt;
-    some really long expression that would usually cause horizontal overflow
-  &lt;/code&gt;
-&lt;/pre&gt;
-</code></pre>
-
-		<!-- shiki-start
-```ts
-console.log('some really long string that would usually cause a horizontal scroll when it overflows on the x axis because reasons');
-```
-shiki-end -->
-
-		<code>code</code>
-
-		<button>button</button>
+		<a href="">
+			https://some.really-long-link-that-would-normally-cause-horizontal-overflow-but-it-wraps-instead
+		</a>
 	</section>
-</div>
 
-<section class="flex col">
 	<Inputs />
-</section>
+</div>
 
 <div class="br-lg" />
 

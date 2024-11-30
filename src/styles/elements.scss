@@ -74,6 +74,10 @@ pre,
 
 code {
 	font-family: var(--font-mono);
+
+	span {
+		color: var(--h-dark);
+	}
 }
 
 blockquote {
