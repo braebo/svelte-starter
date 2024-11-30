@@ -5,8 +5,12 @@
 
 <div class="br-md" />
 
-<div class="page">
-	<section style:gap="1.5rem" in:fly|global={{ ...IN, y: 7.5, duration: 300, delay: 150 }} out:fade|global={OUT}>
+<div class="page flex">
+	<section
+		style:gap="1.5rem"
+		in:fly|global={{ ...IN, y: 7.5, duration: 300, delay: 150 }}
+		out:fade|global={OUT}
+	>
 		<label>
 			<div>text</div>
 			<input type="text" placeholder="foo" />
@@ -48,25 +52,7 @@
 </div>
 
 <style lang="scss">
-	.page {
-		display: flex;
-		flex-wrap: wrap;
-
-		width: min(var(--page-width), calc(100vw - 2rem));
-		height: auto;
-		margin: 0 auto;
-	}
-
 	section {
 		width: 25rem;
-		margin: 1rem auto;
-	}
-
-	label {
-		input,
-		textarea,
-		select {
-			margin-left: 0.5rem;
-		}
 	}
 </style>

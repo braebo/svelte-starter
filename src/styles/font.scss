@@ -35,7 +35,7 @@
 	--font-xxs: 0.75rem;
 	--font-xs: 0.9rem;
 	--font-sm: 1rem;
-	--font: 1.1rem;
+	--font: clamp(1rem, 5vw, 1.125rem);
 	--font-md: clamp(1rem, 5vw, 1.25rem);
 	--font-lg: clamp(1.25rem, 5vw, 1.75rem);
 	--font-xl: clamp(1.5rem, 6vw, 2.25rem);
@@ -65,4 +65,29 @@ blockquote {
 pre,
 code {
 	font-family: var(--font-mono, system-ui, monospace);
+}
+
+h1 {
+	font-size: var(--font-xxxl);
+	font-weight: 800;
+}
+
+h2 {
+	font-size: var(--font-xxl);
+	font-weight: 700;
+}
+
+h3 {
+	font-size: var(--font-xl);
+	font-weight: 600;
+}
+
+h4 {
+	font-size: var(--font-lg);
+	font-weight: 500;
+}
+
+h5 {
+	font-size: var(--font-md);
+	font-weight: 400;
 }

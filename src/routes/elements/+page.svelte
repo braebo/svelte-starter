@@ -1,6 +1,7 @@
 <script>
 	import { IN, OUT } from '$lib/utils/transitions'
 	import { fade, fly } from 'svelte/transition'
+	import Inputs from '../inputs/+page.svelte'
 </script>
 
 <div class="br-md" />
@@ -89,9 +90,16 @@ shiki-end -->
 	</section>
 </div>
 
+<section class="flex col">
+	<Inputs />
+</section>
+
+<div class="br-lg" />
+
 <style lang="scss">
 	.page {
 		display: flex;
+		flex-direction: column;
 		flex-wrap: wrap;
 
 		width: min(var(--page-width), calc(100vw - 2rem));
@@ -100,7 +108,7 @@ shiki-end -->
 	}
 
 	section {
-		width: 25rem;
+		width: 640px;
 		margin: 1rem auto;
 	}
 </style>

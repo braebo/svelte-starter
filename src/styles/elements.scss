@@ -1,20 +1,5 @@
 @use './theme.scss';
 
-h1 {
-	font-size: var(--font-xl);
-}
-
-h2 {
-	font-size: var(--font-lg);
-}
-
-h1,
-h2 {
-	font-weight: 500;
-	letter-spacing: 1.2px;
-	word-spacing: 8px;
-}
-
 h1,
 h2,
 h3,
@@ -102,8 +87,6 @@ blockquote {
 
 	font-style: italic;
 	outline: 1px solid var(--bg-a);
-	// background: var(--bg-b);
-	// box-shadow: var(--shadow-sm);
 
 	color: var(--fg-a);
 
@@ -120,35 +103,27 @@ blockquote {
 	}
 }
 
-input,
-button,
-textarea,
-select,
-blockquote {
-	font-size: inherit;
-	font-family: inherit;
-}
-
 button {
-	background: var(--bg-b);
 	color: var(--fg-a);
+	background: var(--bg-b);
+	outline: 1px solid var(--bg-b);
 	border: none;
 	border-radius: var(--radius);
 	box-shadow: var(--shadow-sm);
 	padding: var(--padding) calc(var(--padding) * 3);
 	width: fit-content;
 
+	transition: 0.15s ease-out;
+
 	&:hover {
 		background: color-mix(in hsl, var(--bg-b) 80%, var(--bg-a));
+		outline-color: var(--bg-d);
 	}
 	&:active {
-		background: color-mix(in hsl, var(--bg-b) 60%, var(--bg-a));
+		background: color-mix(in hsl, var(--bg-b) 40%, var(--bg-a));
 		box-shadow: 0 0 0 var(--shadow-sm);
+		outline-color: var(--bg-e);
 	}
-}
-
-button:focus:not(:focus-visible) {
-	outline: none;
 }
 
 section {
@@ -171,6 +146,5 @@ mark {
 	width: fit-content;
 	padding: 0 var(--padding);
 
-	// makes the div look skewed almost as if it's italic
 	clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
 }
