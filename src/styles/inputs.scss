@@ -18,11 +18,9 @@ textarea,
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button,
 input::-webkit-slider-thumb,
-input::-webkit-slider-runnable-track,
-input::-moz-range-track,
-input::-moz-range-thumb {
+input::-webkit-slider-runnable-track {
+	position: relative;
 	border: none;
-	// outline: 1px solid var(--outline);
 
 	font-size: var(--font-xs);
 
@@ -55,7 +53,6 @@ textarea {
 	color: var(--fg-a);
 	background-color: var(--bg-a);
 	border-radius: var(--radius);
-	// outline: 1px solid var(--outline);
 	outline-width: 1px;
 	outline-style: solid;
 }
@@ -63,7 +60,6 @@ textarea {
 input::placeholder,
 textarea::placeholder {
 	transition: 1s;
-	// color: color-mix(in hsl, var(--fg-e), var(--theme-a) 10%);
 	transition: none;
 	color: var(--fg-e);
 }
@@ -74,7 +70,6 @@ textarea:focus::placeholder {
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-	// outline-color: var(--outline);
 	outline-style: 1px solid var(--outline);
 	outline-width: 1px;
 	border-radius: 2px;
@@ -138,7 +133,6 @@ input[type='range'] {
 		transition: 0.15s;
 
 		pointer-events: none;
-		z-index: 0;
 	}
 
 	&:hover {
@@ -152,7 +146,7 @@ input[type='range'] {
 	&::-webkit-slider-runnable-track {
 		cursor: pointer;
 		position: relative;
-		z-index: -1;
+		z-index: 99;
 
 		width: 100%;
 
@@ -160,13 +154,10 @@ input[type='range'] {
 		transition-property: outline-color, background-color;
 	}
 
-	// &::-webkit-slider-thumb,
-	// &::-moz-range-thumb {
 	&::-webkit-slider-thumb {
 		cursor: pointer;
 		appearance: none;
 		position: relative;
-		z-index: 2;
 
 		width: 12px;
 		height: 12px;
