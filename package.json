@@ -1,7 +1,7 @@
 {
 	"name": "sveltekit-starter",
-	"private": true,
 	"version": "0.0.1",
+	"private": true,
 	"description": "Opinionated SvelteKit starter template.",
 	"keywords": [
 		"sveltekit",
@@ -30,9 +30,6 @@
 		"@sveltejs/adapter-auto": "^3.3.1",
 		"@sveltejs/kit": "^2.8.0",
 		"@sveltejs/vite-plugin-svelte": "^4.0.0",
-		"@tailwindcss/aspect-ratio": "^0.4.2",
-		"@tailwindcss/container-queries": "^0.1.1",
-		"@tailwindcss/typography": "^0.5.15",
 		"@types/node": "22.9.0",
 		"@types/remark-abbr": "^1.4.4",
 		"@vitest/ui": "^2.1.4",
@@ -52,7 +49,6 @@
 		"sass-embedded": "^1.80.6",
 		"svelte": "5.1.13",
 		"svelte-check": "^4.0.6",
-		"tailwindcss": "^3.4.14",
 		"typescript": "^5.6.3",
 		"vite": "^5.4.10",
 		"vitest": "^2.1.4"
