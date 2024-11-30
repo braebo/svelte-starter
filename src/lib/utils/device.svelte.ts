@@ -40,10 +40,7 @@ class Device {
 		addEventListener('scroll', this.#onScroll)
 		addEventListener('pointermove', this.#onPointerMove)
 
-		if (DEV) {
-			this.#log = new Logger('Device', { fg: 'plum' })
-			this.#log.fn('init').info(this)
-		}
+		if (DEV) this.#log = new Logger('Device', { fg: 'plum' })
 	}
 
 	#onResize = (): void => {
