@@ -1,6 +1,6 @@
 {
-    "name": "sveltekit-starter",
-    "short_name": "sveltekit-starter",
+    "name": "svelte-starter",
+    "short_name": "svelte-starter",
 	"start_url": "/",
     "icons": [
         {

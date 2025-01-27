@@ -1,54 +1,35 @@
 @use './reset.scss';
 @use './theme.scss';
 
+@use './dimensions.scss';
 @use './elements.scss';
+@use './shadows.scss';
 @use './inputs.scss';
 @use './utils.scss';
 @use './font.scss';
+@use './code.scss';
 
 $mobile: 900px;
 
 :root {
 	--mobile: #{$mobile};
 
-	--radius-sm: 0.1875rem;
-	--radius: 0.3125rem;
-	--radius-md: 0.4375rem;
-	--radius-lg: 0.625rem;
+	--radius-sm: 0.3rem;
+	--radius: 0.5rem;
+	--radius-md: 0.7rem;
+	--radius-lg: 1rem;
 
-	--page-width: min(70rem, 100vw);
+	--padding: 0.8rem;
 
-	--padding: 0.5rem;
+	--bg-ab: color-mix(in lab, var(--bg-a), var(--bg-b) 20%);
 
-	--shadow-lightness: 0.5;
-
-	--shadow-sm: 0rem 0.0313rem 0.0469rem rgba(0, 0, 0, calc(var(--shadow-lightness) * 0.04)),
-		0rem 0.125rem 0.0938rem rgba(0, 0, 0, calc(var(--shadow-lightness) * 0.04)),
-		0rem 0.15rem 0.125rem rgba(0, 0, 0, calc(var(--shadow-lightness) * 0.05)),
-		0rem 0.1875rem 0.1875rem rgba(0, 0, 0, calc(var(--shadow-lightness) * 0.1)),
-		0rem 0.3125rem 0.3125rem rgba(0, 0, 0, calc(var(--shadow-lightness) * 0.1)),
-		0rem 0.4375rem 0.625rem rgba(0, 0, 0, calc(var(--shadow-lightness) * 0.15));
-
-	--shadow: 0rem 0.0469rem 0.0625rem rgba(0, 0, 0, calc(var(--shadow-lightness) * 0.03)),
-		0rem 0.15rem 0.125rem rgba(0, 0, 0, calc(var(--shadow-lightness) * 0.04)),
-		0rem 0.28rem 0.1875rem rgba(0, 0, 0, calc(var(--shadow-lightness) * 0.05)),
-		0rem 0.3125rem 0.3125rem rgba(0, 0, 0, calc(var(--shadow-lightness) * 0.065)),
-		0rem 0.625rem 0.625rem rgba(0, 0, 0, calc(var(--shadow-lightness) * 0.09)),
-		0rem 0.625rem 1.25rem rgba(0, 0, 0, calc(var(--shadow-lightness) * 0.1));
-
-	--shadow-lg: 0rem 0.078rem 0.0625rem rgba(0, 0, 0, calc(var(--shadow-lightness) * 0.06)),
-		0rem 0.15rem 0.15rem rgba(0, 0, 0, calc(var(--shadow-lightness) * 0.07)),
-		0rem 0.28rem 0.3125rem rgba(0, 0, 0, calc(var(--shadow-lightness) * 0.08)),
-		0rem 0.3125rem 0.5rem rgba(0, 0, 0, calc(var(--shadow-lightness) * 0.1)),
-		0rem 0.625rem 0.9375rem rgba(0, 0, 0, calc(var(--shadow-lightness) * 0.1)),
-		0rem 1.25rem 1.875rem rgba(0, 0, 0, calc(var(--shadow-lightness) * 0.01));
-
-	&[theme='light'] {
+	&.light {
 		--shadow-lightness: 0.33;
 	}
 }
 
 html {
+	font-size: 62.5%;
 	color-scheme: light dark;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
@@ -60,7 +41,6 @@ body {
 
 	min-height: 100vh;
 	max-width: 100vw;
-	margin: 0;
 
 	transition:
 		color 0.5s,

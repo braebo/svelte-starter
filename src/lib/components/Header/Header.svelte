@@ -1,39 +1,49 @@
 <script lang="ts">
-	import HomeIcon from '$lib/components/Header/Logo.svelte'
+	import HomeIcon from '$lib/components/header/Logo.svelte'
 	import { device } from '$lib/utils/device.svelte'
+	import DesktopNav from './navs/NavDesktop.svelte'
 	import ThemeSwitch from '../ThemeSwitch.svelte'
 	import { page } from '$app/stores'
-	import Nav from './Nav/Nav.svelte'
 </script>
 
-<header>
-	<div class="home">
-		<a href="/">
-			<HomeIcon active={$page.url.pathname === '/'} />
-		</a>
-	</div>
+<span style="display: contents; --height: 4.25rem">
+	<header class:scrolled={device.scrollY > 0}>
+		<div class="home">
+			<a href="/">
+				<HomeIcon --width="1.5rem" active={$page.url.pathname === '/'} />
+			</a>
+		</div>
 
-	<Nav />
-
-	<div class="theme">
 		{#if !device.mobile}
-			<ThemeSwitch />
+			<DesktopNav />
 		{/if}
-	</div>
-</header>
+
+		<div class="theme">
+			<ThemeSwitch />
+		</div>
+	</header>
+	<div class="header-buffer" style:height="var(--height)"></div>
+</span>
 
 <style lang="scss">
 	header {
-		position: relative;
+		box-sizing: border-box;
+		position: fixed;
+		width: 100%;
 
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 
-		height: 5rem;
-		padding: 0 1.5rem;
+		height: var(--height);
+		padding: 0 1.25rem;
 
 		z-index: 50;
+
+		&.scrolled {
+			background-color: color-mix(in lch, transparent, var(--bg-a) 3%);
+			backdrop-filter: blur(20px);
+		}
 	}
 
 	.theme {

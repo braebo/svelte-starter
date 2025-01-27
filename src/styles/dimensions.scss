@@ -1,0 +1,28 @@
+:root {
+	--page-width: min(70rem, 100vw);
+
+	// --nav-height: 3.5rem;
+	--nav-height: 6rem;
+	// --nav-width: min(124rem, 100vw);
+	--nav-width: 100%;
+	--secondary-nav-height: 5rem;
+
+	--padding-top: 6rem;
+	--padding-bottom: 8rem;
+	--padding-inset: 1.6rem;
+	--thick-border-width: 0.3rem;
+	--border-radius: 0.4rem;
+	--border-radius-inner: 0.2rem;
+	--page-content-width: 76rem;
+	--banner-height: 0px;
+
+	@media screen and (min-width: 480px) {
+		--padding-inset: 3.2rem;
+	}
+
+	@media screen and (min-width: 800px) {
+		--padding-top: 8rem;
+		--padding-inset: 4.8rem;
+		--secondary-nav-height: 6rem;
+	}
+}

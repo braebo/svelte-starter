@@ -1,20 +1,17 @@
 <script lang="ts">
+	import { fly } from 'svelte/transition'
+	import { routes } from '$lib/routes'
 	import { page } from '$app/stores'
-
-	const {
-		links,
-		showMenu = $bindable(false),
-	}: {
-		links: [path: string, title: string][]
-		showMenu?: boolean
-	} = $props()
 </script>
 
-<nav class:showMenu>
+<nav>
 	<ul>
-		{#each links as [path, title], i (title)}
-			<!-- <li class:active={$page.url.pathname === path} transition:fly|global={{ y: -10 - 5 * i }}> -->
-			<li class:active={$page.url.pathname === path} style:animation-delay={`${links.length * 0.1 - (i % 2) * 0.1}s`}>
+		{#each routes as { path, title }, i (title)}
+			<li
+				class:active={$page.url.pathname === path}
+				style:animation-delay={`${routes.length * 0.1 - (i % 2) * 0.1}s`}
+				out:fly|global={{ y: -20, duration: 300 }}
+			>
 				<a data-sveltekit-prefetch href={path}>{title}</a>
 			</li>
 		{/each}
@@ -47,7 +44,7 @@
 		color: var(--fg-a);
 		opacity: 0;
 		transform: translateY(-5px);
-		animation: fly 2s cubic-bezier(0.23, 1, 0.320, 1) 0.1s forwards;
+		animation: fly 2s cubic-bezier(0.23, 1, 0.32, 1) 0.1s forwards;
 	}
 	@keyframes fly {
 		from {
@@ -69,16 +66,12 @@
 
 		color: currentColor;
 
-		font-size: var(--font-sm);
-		// font-variation-settings:
-		// 	'wght' 300,
-		// 	'wdth' 97;
+		font-size: var(--font);
 		font-variation-settings:
 			'wght' 500,
 			'wdth' 97;
 		text-transform: uppercase;
 		text-decoration: none;
-		// letter-spacing: 2.75px;
 
 		transition: 0.2s;
 		pointer-events: all;

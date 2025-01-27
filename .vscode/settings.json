@@ -15,40 +15,9 @@
 	"editor.formatOnSave": false,
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 
-	//* Svelte
-	"[svelte]": {
-		"editor.defaultFormatter": "svelte.svelte-vscode"
-	},
-	"svelte.enable-ts-plugin": true,
-	"svelte.plugin.css.globals": "src/styles/theme.scss, src/styles/app.scss",
-	"svelte.plugin.svelte.compilerWarnings": {
-		"element_invalid_self_closing_tag": "ignore"
-	},
-
 	//* Workbench
 	"workbench.iconTheme": "material-icon-theme",
 	"workbench.editor.labelFormat": "short",
-
-	//* File nesting.
-	// "explorer.fileNesting.enabled": true,
-	"explorer.fileNesting.enabled": false,
-	"explorer.fileNesting.expand": false,
-	"explorer.fileNesting.patterns": {
-		".gitignore": ".gitattributes, .gitmodules, .gitmessage, .mailmap, .git-blame*",
-		"*.js": "$(capture).js.map, $(capture).min.js, $(capture).d.ts",
-		// "*.ts": "$(capture).js, $(capture).*.ts",
-		"*.svelte": "$(capture).js, $(capture).ts, $(capture).*.ts",
-		"index.d.ts": "*.d.ts",
-		"shims.d.ts": "*.d.ts",
-		"default.nix": "shell.nix",
-		".env": "*.env, .env.*, env.d.ts",
-		"dockerfile": ".dockerignore, dockerfile*",
-		"package.json": ".browserslist*, .circleci*, .codecov, .commitlint*, .editorconfig, .firebase*, .flowconfig, .github*, .gitignore, .gitlab*, .gitpod*, .huskyrc*, .jslint*, .lintstagedrc*, .markdownlint*, .mocha*, .node-version, .nodemon*, .npm*, .nvmrc, .pm2*, .pnp.*, .pnpm*, .releaserc*, .sentry*, .stackblitz*, .styleci*, .stylelint*, .tazerc*, .textlint*, .travis*, .vscode*, .watchman*, .xo-config*, .yamllint*, .yarnrc*, api-extractor.json, appveyor*, ava.config.*, azure-pipelines*, bower.json, build.config.*, commitlint*, crowdin*, cypress.json, dangerfile*, dprint.json, firebase.json, grunt*, gulp*, jasmine.*, jenkins*, jest.config.*, jsconfig.*, karma*, lerna*, lint-staged*, nest-cli.*, netlify*, nodemon*, nx.*, package-lock.json, pm2.*, pnpm*, pullapprove*, puppeteer.config.*, renovate*, rollup.config.*, stylelint*, tsdoc.*, tslint*, tsup.config.*, turbo*, typedoc*, vetur.config.*, vitest.config.*, webpack.config.*, workspace.json, xo.config.*, yarn*",
-		"readme.*": "authors, backers.md, changelog*, citation*, code_of_conduct.md, codeowners, contributing.md, contributors, copying, credits, governance.md, history.md, license*, maintainers, readme*, security.md, sponsors.md",
-		"cargo.toml": ".clippy.toml, .rustfmt.toml, cargo.lock, clippy.toml, cross.toml, rust-toolchain.toml, rustfmt.toml",
-		"svelte.config.*": "*.env, .eslint*, .babelrc*, .codecov, .cssnanorc*, .env.*, .htmlnanorc*, .mocha*, .postcssrc*, .terserrc*, api-extractor.json, ava.config.*, babel.config.*, cssnano.config.*, cypress.json, env.d.ts, htmlnanorc.*, jasmine.*, jest.config.*, jsconfig.*, karma*,.prettier*, mdsvex.config.js, playwright.config.*, postcss.config.*, puppeteer.config.*, svgo.config.*, tailwind.config.*, tsdoc.*, unocss.config.*, vercel*, vite.config.*, vitest.config.*, webpack.config.*, windi.config.*",
-		"favicon.ico": "robots.txt, safari-pinned-tab.svg, browserconfig.xml, site.webmanifest, *.png"
-	},
 
 	//* More comment tags.
 	"better-comments.tags": [
@@ -64,48 +33,60 @@
 		},
 		{
 			"tag": "!",
-			"color": "#886f50",
-			"strikethrough": false,
-			"underline": false,
-			"backgroundColor": "transparent",
-			"bold": false,
-			"italic": false
+			"color": "#886f50"
 		},
 		{
 			"tag": "?",
-			"color": "#3498DB",
-			"strikethrough": false,
-			"underline": false,
-			"backgroundColor": "transparent",
-			"bold": false,
-			"italic": false
+			"color": "#3498DB"
 		},
 		{
 			"tag": "//",
 			"color": "#474747",
 			"strikethrough": true,
-			"underline": false,
-			"backgroundColor": "transparent",
-			"bold": false,
-			"italic": false
+			"backgroundColor": "transparent"
 		},
 		{
 			"tag": "todo",
-			"color": "#FF8C00",
-			"strikethrough": false,
-			"underline": false,
-			"backgroundColor": "transparent",
-			"bold": false,
-			"italic": false
+			"color": "#FF8C00"
 		},
 		{
 			"tag": "*",
-			"color": "#98C379",
-			"strikethrough": false,
-			"underline": false,
-			"backgroundColor": "transparent",
-			"bold": false,
-			"italic": false
+			"color": "#98C379"
 		}
-	]
+	],
+
+	//* Svelte
+	"[svelte]": {
+		"editor.defaultFormatter": "svelte.svelte-vscode"
+	},
+	"svelte.enable-ts-plugin": true,
+	"svelte.plugin.css.globals": "src/styles/theme.scss, src/styles/app.scss",
+	"svelte.plugin.svelte.compilerWarnings": {
+		"element_invalid_self_closing_tag": "ignore",
+		// "a11y_aria_attributes": "ignore",
+		// "a11y_incorrect_aria_attribute_type": "ignore",
+		// "a11y_unknown_aria_attribute": "ignore",
+		// "a11y_hidden": "ignore",
+		// "a11y_misplaced_role": "ignore",
+		// "a11y_unknown_role": "ignore",
+		// "a11y_no_abstract_role": "ignore",
+		// "a11y_no_redundant_roles": "ignore",
+		// "a11y_role_has_required_aria_props": "ignore",
+		// "a11y_accesskey": "ignore",
+		// "a11y_autofocus": "ignore",
+		// "a11y_misplaced_scope": "ignore",
+		// "a11y_positive_tabindex": "ignore",
+		// "a11y_invalid_attribute": "ignore",
+		// "a11y_missing_attribute": "ignore",
+		// "a11y_img_redundant_alt": "ignore",
+		// "a11y_label_has_associated_control": "ignore",
+		// "a11y_media_has_caption": "ignore",
+		// "a11y_distracting_elements": "ignore",
+		// "a11y_structure": "ignore",
+		// "a11y_mouse_events_have_key_events": "ignore",
+		// "a11y_missing_content": "ignore",
+		// "a11y_click_events_have_key_events": "ignore",
+		"a11y_no_static_element_interactions": "ignore"
+		// "a11y_no_noninteractive_element_interactions": "ignore"
+	}
 }

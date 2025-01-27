@@ -1,0 +1,35 @@
+<script lang="ts">
+	import type { Snippet } from 'svelte';
+
+	let { children }: { children: Snippet } = $props();
+</script>
+
+<div class="hover-menu">
+	{@render children()}
+</div>
+
+<style>
+	.hover-menu {
+		padding: 0.5rem;
+
+		:global {
+			a,
+			button {
+				color: inherit;
+				padding: 1rem;
+				display: block;
+				font: var(--font-ui-medium);
+				text-decoration: none;
+				line-height: 1;
+				width: 100%;
+				text-align: left;
+				border-radius: var(--border-radius-inner);
+			}
+
+			a:hover,
+			button:hover {
+				background-color: var(--bg-d);
+			}
+		}
+	}
+</style>

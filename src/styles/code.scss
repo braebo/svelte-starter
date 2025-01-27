@@ -1,0 +1,50 @@
+pre {
+	box-sizing: border-box;
+	padding: var(--padding);
+	outline: 1px solid var(--bg-a);
+}
+
+pre,
+:not(pre) > code {
+	max-width: min(100%, 100vw);
+	height: max-content;
+	width: fit-content;
+
+	background: var(--bg-b);
+	color: var(--fg-a);
+	border-radius: 3px;
+	box-shadow: var(--shadow-sm);
+
+	// font-size: 16px;
+
+	overflow-x: auto;
+}
+
+// Inline <code> elements.
+:not(pre) > code {
+	padding: 0.15rem 0.5rem;
+}
+
+code {
+	font-style: var(--h-dark-font-style);
+
+	span {
+		color: var(--h-dark);
+		font-style: var(--h-dark-font-style);
+	}
+}
+
+:root.light {
+	pre,
+	:not(pre) > code {
+		background: var(--bg-ab);
+		outline-color: var(--bg-b);
+		color: var(--h-light);
+		font-style: var(--h-light-font-style);
+	}
+
+	code span {
+		color: var(--h-light);
+		font-style: var(--h-light-font-style);
+	}
+}

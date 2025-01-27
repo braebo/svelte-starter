@@ -1,6 +1,6 @@
 import type { Theme } from './themer.types'
 
-import { dim, gr } from '$lib/utils/logger/logger-colors'
+import { gr } from '$lib/utils/logger/logger-colors'
 import { Logger } from '$lib/utils/logger/logger'
 import { vanilla } from './themes/themes'
 import { parse } from 'cookie'
@@ -137,7 +137,8 @@ class Themer {
 		this.css.replaceSync(str)
 
 		document.documentElement.style.setProperty('color-scheme', this.mode)
-		document.documentElement.setAttribute('theme', this.mode)
+		document.documentElement.classList.toggle('light', this.mode === 'light')
+		document.documentElement.classList.toggle('dark', this.mode === 'dark')
 
 		if (this.#storage) {
 			globalThis.localStorage?.setItem(this.#storageKey, this.preference)

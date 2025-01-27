@@ -15,5 +15,5 @@
 </script>
 
 <svelte:head>
-	<title>sveltekit-starter · {pageTitle()}</title>
+	<title>svelte-starter · {pageTitle()}</title>
 </svelte:head>

@@ -1,3 +1,7 @@
+* {
+	box-sizing: border-box;
+}
+
 /**
  ** Hard normalise elements
  */
@@ -199,19 +203,19 @@ pre {
 // /**
 //  ** Ensure certain elements are set to block by default
 //  */
-// article,
-// aside,
-// details,
-// figcaption,
-// figure,
-// footer,
-// header,
-// hgroup,
-// menu,
-// nav,
-// section {
-// 	display: block;
-// }
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+	display: block;
+}
 
 // /**
 //  ** Hard normalise elements

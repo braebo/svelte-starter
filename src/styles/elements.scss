@@ -13,12 +13,7 @@ p,
 li,
 a,
 blockquote {
-	color: var(--fg-a, --text-color);
-
-	font-size: var(--font);
-	line-height: 1.4;
-	text-wrap: balance !important;
-	word-wrap: balance !important;
+	color: var(--fg-a);
 
 	@media screen and (max-width: 560px) {
 		word-wrap: break-word;
@@ -42,41 +37,6 @@ a {
 	&:hover {
 		text-decoration: underline;
 		text-decoration-color: var(--theme-a);
-	}
-}
-
-pre {
-	box-sizing: border-box;
-	padding: var(--padding);
-	outline: 1px solid var(--bg-a);
-	font-family: var(--font-mono);
-}
-
-pre,
-:not(pre) > code {
-	max-width: min(100%, 100vw);
-	height: max-content;
-	width: fit-content;
-
-	background: var(--bg-b);
-	color: var(--fg-a);
-	border-radius: 3px;
-	box-shadow: var(--shadow-sm);
-
-	font-size: 16px;
-
-	overflow-x: auto;
-}
-
-:not(pre) > code {
-	padding: 0.15rem 0.5rem;
-}
-
-code {
-	font-family: var(--font-mono);
-
-	span {
-		color: var(--h-dark);
 	}
 }
 
@@ -108,16 +68,17 @@ blockquote {
 }
 
 button {
+	width: fit-content;
+	padding: var(--padding) calc(var(--padding) * 3);
+
 	color: var(--fg-a);
 	background: var(--bg-b);
 	outline: 1px solid var(--bg-b);
 	border: none;
 	border-radius: var(--radius);
 	box-shadow: var(--shadow-sm);
-	padding: var(--padding) calc(var(--padding) * 3);
-	width: fit-content;
 
-	transition: 0.15s ease-out;
+	transition: 0.1s ease-out;
 
 	&:hover {
 		background: color-mix(in hsl, var(--bg-b) 80%, var(--bg-a));
@@ -127,6 +88,7 @@ button {
 		background: color-mix(in hsl, var(--bg-b) 40%, var(--bg-a));
 		box-shadow: 0 0 0 var(--shadow-sm);
 		outline-color: var(--bg-e);
+		scale: 0.98;
 	}
 }
 
@@ -136,7 +98,7 @@ section {
 	gap: var(--padding);
 
 	width: 100%;
-	max-width: min(var(--page-width), 90vw);
+	max-width: min(var(--page-width), calc(100vw - var(--padding-inset)));
 	margin: 0 auto;
 }
 

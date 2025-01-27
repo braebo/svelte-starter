@@ -1,5 +1,13 @@
-import type { ServerLoad } from '@sveltejs/kit'
+import { routes } from '$lib/routes'
 
-export const load: ServerLoad = ({ locals }) => {
-	return { theme: locals.theme }
+export const prerender = true
+
+export const load = async ({ url, locals }) => {
+	const title = routes.find((link) => link.path === url.pathname.split('/')[1]!)?.title ?? ''
+
+	return {
+		title,
+		routes,
+		theme: locals.theme,
+	}
 }

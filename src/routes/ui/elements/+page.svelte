@@ -4,8 +4,6 @@
 	import Inputs from '../inputs/+page.svelte'
 </script>
 
-<div class="br-md" />
-
 <div class="page">
 	<section in:fly|global={{ ...IN, y: 7.5, duration: 300 }} out:fade|global={OUT}>
 		<h1>Heading 1</h1>

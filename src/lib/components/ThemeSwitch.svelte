@@ -32,11 +32,11 @@
 		position: relative;
 		--duration: 0.25s;
 
-		--width: 4.5rem;
-		--padding: 0.25rem;
+		--width: 7.2rem;
+		--padding: 0.4rem;
 		--accent: #2196f3;
 
-		--thumb-size: 1.1rem;
+		--thumb-size: 1.76rem;
 
 		--thumb: var(--bg-a);
 
@@ -48,12 +48,12 @@
 		--transform: calc(var(--width) - var(--thumb-size) - var(--padding) * 2);
 	}
 
-	:global(:root[theme='dark'] .switch) {
+	:global(:root.dark .switch) {
 		--outline-focus: var(--bg-c);
 		.track {
 			box-shadow:
-				-1px 1.5px 0.3rem rgba(0, 0, 0, 0.25) inset,
-				0px 0.5px 0.1rem rgba(0, 0, 0, 0.25) inset;
+				-1px 1.5px 0.48rem rgba(0, 0, 0, 0.25) inset,
+				0px 0.5px 0.16rem rgba(0, 0, 0, 0.25) inset;
 		}
 	}
 
@@ -95,8 +95,8 @@
 		outline-style: solid;
 		border-radius: var(--radius-md);
 		box-shadow:
-			-1px 1px 0.33rem rgba(0, 0, 0, 0.33) inset,
-			0px 1px 0.1rem rgba(0, 0, 0, 0.33) inset;
+			-1px 1px 0.528rem rgba(0, 0, 0, 0.33) inset,
+			0px 1px 0.16rem rgba(0, 0, 0, 0.33) inset;
 
 		cursor: pointer;
 		transition:
@@ -123,12 +123,12 @@
 		max-height: 100%;
 
 		box-shadow:
-			0.3px 1px 0 color-mix(in lch, var(--bg-d), transparent 50%),
-			-0.3px 0.3px 0.1px color-mix(in lch, var(--fg-d), transparent 75%) inset,
-			-1px 1px 1px color-mix(in lch, var(--fg-d), transparent 90%) inset,
-			0px -1px 0.1px rgba(1, 1, 1, 0.1) inset;
+			0.0187rem 0.0625rem 0 color-mix(in lch, var(--bg-d), transparent 50%),
+			-0.0187rem 0.0187rem 0.006rem color-mix(in lch, var(--fg-d), transparent 75%) inset,
+			-0.0625rem 0.0625rem 0.0625rem color-mix(in lch, var(--fg-d), transparent 90%) inset,
+			0rem -0.0625rem 0.006rem rgba(1, 1, 1, 0.1) inset;
 
-		border-radius: 0.25rem;
+		border-radius: 0.4rem;
 
 		transition: var(--transition);
 	}
@@ -153,21 +153,21 @@
 		pointer-events: none;
 		transition: var(--transition);
 
-		font-size: var(--font-xs);
+		font-size: var(--font-sm);
 		font-family: var(--font-a);
 		font-variation-settings:
 			'wght' 400,
 			'wdth' 104;
-		letter-spacing: 0.1rem;
+		letter-spacing: 0.16rem;
 
 		&.light {
 			animation: in-left var(--duration) cubic-bezier(0.05, 1, 0.56, 0.91) forwards;
-			left: 0.5rem;
+			left: 0.8rem;
 		}
 
 		&.dark {
 			animation: in-right var(--duration) cubic-bezier(0.05, 1, 0.56, 0.91) forwards;
-			right: 0.5rem;
+			right: 0.8rem;
 		}
 
 		&.system {
@@ -201,7 +201,7 @@
 	button.system #{$thumb} {
 		transform: translate(0, 0);
 		width: calc(var(--width) - var(--padding) * 2);
-		border-radius: 5px;
+		border-radius: 0.3125rem;
 	}
 
 	/* Animations */
@@ -230,7 +230,7 @@
 
 	@keyframes in-center {
 		from {
-			transform: translateX(-0.25rem) scale(1);
+			transform: translateX(-0.4rem) scale(1);
 			opacity: 0;
 		}
 		to {

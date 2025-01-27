@@ -1,13 +1,13 @@
-# [sveltekit-starter](https://github.com/braebo/sveltekit-starter)
+# [svelte-starter](https://github.com/braebo/svelte-starter)
 
 A minimal, opinionated Sveltekit starter-template.
 
-demo · https://sveltekit-starter.braebo.dev
+demo · https://svelte-starter.braebo.dev
 
 ### init
 
 ```bash
-npx degit braebo/sveltekit-starter my-app
+npx degit braebo/svelte-starter my-app
 ```
 
 ### run

@@ -48,7 +48,7 @@ input[type='number'],
 select,
 textarea {
 	width: 100%;
-	padding: 0.2rem 0.3rem;
+	padding: 0.2rem 1rem;
 
 	color: var(--fg-a);
 	background-color: var(--bg-a);
@@ -57,11 +57,19 @@ textarea {
 	outline-style: solid;
 }
 
+textarea {
+	padding: 0.75rem 1rem;
+}
+
 input::placeholder,
 textarea::placeholder {
 	transition: 1s;
 	transition: none;
-	color: var(--fg-e);
+	color: var(--bg-c);
+
+	:root.dark & {
+		color: var(--bg-e);
+	}
 }
 input:focus::placeholder,
 textarea:focus::placeholder {

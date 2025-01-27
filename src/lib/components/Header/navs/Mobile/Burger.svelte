@@ -1,17 +1,17 @@
 <script lang="ts">
-	import { OnMount, scrollY } from 'fractils'
+	import { browser } from '$app/environment'
+	import { device } from '$lib/utils/device.svelte'
 	import { fly } from 'svelte/transition'
 
-	export let showMenu = false
+	let { showMenu = $bindable(false) }: { showMenu: boolean } = $props()
 
-	let intro = true
+	let scrolled = $derived(device.scrollY > 100)
+	let intro = $state(true)
 
 	const handleClick = () => {
 		intro = false
 		showMenu = !showMenu
 	}
-
-	$: scrolled = $scrollY > 100
 </script>
 
 <div
@@ -20,13 +20,19 @@
 	tabindex="0"
 	class:scrolled
 	class:showMenu
-	on:keypress={handleClick}
+	onkeypress={handleClick}
+	onpointerdown={handleClick}
 	out:fly|global={{ x: 75 }}
-	on:pointerdown={handleClick}
 >
-	<OnMount>
+	{#if browser}
 		{#key showMenu}
-			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 101 101" overflow="visible" height="100%" width="100%">
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				viewBox="0 0 101 101"
+				overflow="visible"
+				height="100%"
+				width="100%"
+			>
 				<path
 					class="TopBun"
 					class:showMenu
@@ -58,7 +64,7 @@
 				/>
 			</svg>
 		{/key}
-	</OnMount>
+	{/if}
 </div>
 
 <style lang="scss">
@@ -72,11 +78,10 @@
 		--pattyDur: 0.75s;
 		--bunDur: 0.5s;
 	}
+
 	.burger {
-		position: fixed;
+		position: relative;
 		z-index: 30;
-		top: 0.5rem;
-		right: 1rem;
 
 		width: 50px;
 		height: 50px;
@@ -129,21 +134,25 @@
 
 	.TopBun {
 		transform-origin: 25% 40%;
-		animation: var(--openDur) cubic-bezier(0.5, 0, 1, 0.5) var(--openDelay) reverse forwards openTop;
+		animation: var(--openDur) cubic-bezier(0.5, 0, 1, 0.5) var(--openDelay) reverse forwards
+			openTop;
 		transform: rotate(45deg);
 	}
 	.BottomBun {
 		transform-origin: 30% 60%;
-		animation: var(--openDur) cubic-bezier(0.5, 0, 1, 0.5) var(--openDelay) reverse forwards openBottom;
+		animation: var(--openDur) cubic-bezier(0.5, 0, 1, 0.5) var(--openDelay) reverse forwards
+			openBottom;
 		transform: rotate(-45deg);
 	}
 
 	.TopBun.showMenu {
-		animation: var(--closeDur) cubic-bezier(0, 0.51, 0.37, 1.02) var(--closeDelay) forwards openTop;
+		animation: var(--closeDur) cubic-bezier(0, 0.51, 0.37, 1.02) var(--closeDelay) forwards
+			openTop;
 		transform: rotate(0deg);
 	}
 	.BottomBun.showMenu {
-		animation: var(--closeDur) cubic-bezier(0, 0.51, 0.37, 1.02) var(--closeDelay) forwards openBottom;
+		animation: var(--closeDur) cubic-bezier(0, 0.51, 0.37, 1.02) var(--closeDelay) forwards
+			openBottom;
 		transform: rotate(0deg);
 	}
 
