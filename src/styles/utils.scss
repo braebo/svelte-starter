@@ -11,7 +11,7 @@ br-sm,
 br-md,
 .br-md {
 	height: 4rem;
-	@media screen and (max-width: 560px) {
+	@media screen and (max-width: 831px) {
 		height: 3rem;
 	}
 }
@@ -19,7 +19,7 @@ br-md,
 br-lg,
 .br-lg {
 	height: 6.5rem;
-	@media screen and (max-width: 560px) {
+	@media screen and (max-width: 831px) {
 		height: 5rem;
 	}
 }
@@ -27,7 +27,7 @@ br-lg,
 br-xl,
 .br-xl {
 	height: 10rem;
-	@media screen and (max-width: 560px) {
+	@media screen and (max-width: 831px) {
 		height: 6rem;
 	}
 }
