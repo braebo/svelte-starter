@@ -53,6 +53,9 @@ importers:
       fractils:
         specifier: 3.1.3
         version: 3.1.3
+      gooey:
+        specifier: ^0.3.2
+        version: 0.3.2
       mdsvex:
         specifier: ^0.12.3
         version: 0.12.3(svelte@5.19.3)
@@ -1013,6 +1016,9 @@ packages:
   globals@14.0.0:
     resolution: {integrity: sha512-oahGvuMGQlPw/ivIYBjVSrWAfWLBeku5tpPE2fOPLi+WHffIWbuh2tCjhyQhTBPMf5E9jDEH4FOmTYgYwbKwtQ==}
     engines: {node: '>=18'}
+
+  gooey@0.3.2:
+    resolution: {integrity: sha512-DeGQpKGg/uCK0C44zB00Y/tcUoWq4w6r9bseYKBZ8lQ6jN71UgLjcfwJTFbEh8XtFru/uI+redw3g4EEfdCLgA==}
 
   has-flag@4.0.0:
     resolution: {integrity: sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ==}
@@ -2790,6 +2796,8 @@ snapshots:
       is-glob: 4.0.3
 
   globals@14.0.0: {}
+
+  gooey@0.3.2: {}
 
   has-flag@4.0.0: {}
 

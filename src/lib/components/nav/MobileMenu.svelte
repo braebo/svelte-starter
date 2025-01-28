@@ -179,34 +179,40 @@
 		position: fixed;
 		left: 0px;
 		bottom: var(--bottom, var(--nav-height));
-		z-index: 100;
+
 		width: 100%;
 		height: 70vh;
+
 		border-radius: 1rem 1rem 0 0;
+
+		filter: var(--shadow);
+		transform: translate3d(0, 0, 0);
+
 		overflow-y: hidden;
 		overflow-x: hidden;
 		pointer-events: none;
-		transform: translate3d(0, 0, 0);
-		filter: var(--shadow);
+		z-index: 100;
 	}
 
 	button {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		display: flex;
 		gap: 1.5rem;
 	}
 
 	.menu-background {
 		position: absolute;
-		width: 100%;
 		left: 0;
 		bottom: 0;
+
+		width: 100%;
 		height: 99.5%;
+
 		border-radius: 1rem 1rem 0 0;
 		background: var(--background, var(--bg-b));
 		will-change: height;
+
 		transition: 0.3s var(--quint-out);
 		transition-property: none;
 
@@ -220,8 +226,10 @@
 	}
 
 	.mobile-main-menu {
-		height: 100%;
 		contain: layout paint;
+
+		height: 100%;
+
 		transform: translateZ(0);
 		backface-visibility: hidden;
 	}
@@ -229,6 +237,7 @@
 	.clip {
 		width: 100%;
 		height: 100%;
+
 		transition: clip-path 0.3s cubic-bezier(0.23, 1, 0.32, 1);
 		will-change: clip-path;
 	}
@@ -238,11 +247,13 @@
 		bottom: -1px;
 
 		display: grid;
+		grid-template-columns: 50% 50%;
+		grid-auto-rows: 100%;
+
 		width: 200%;
 		height: 100%;
-		grid-template-columns: 50% 50%;
+
 		transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-		grid-auto-rows: 100%;
 
 		&.offset {
 			transform: translate3d(-50%, 0, 0);
@@ -256,20 +267,25 @@
 
 		& :global(a) {
 			position: relative;
-			padding: 0.3rem 0;
-			color: inherit;
-			font: var(--font-ui-medium);
+
 			width: 100%;
 			height: 100%;
+			padding: 0.3rem 0;
+
+			color: inherit;
+
+			font: var(--font-ui-md);
 		}
 	}
 
 	.universal .contents {
 		position: absolute;
-		width: 50%;
 		bottom: 0;
-		padding: 1rem var(--padding-inset);
+
+		width: 50%;
 		max-height: 70vh;
+		padding: 1rem var(--padding-inset);
+
 		overflow-y: scroll;
 
 		button {
@@ -280,8 +296,9 @@
 
 	.context {
 		position: relative;
-		height: 100%;
 		bottom: -7px;
+
+		height: 100%;
 		padding-bottom: 2rem;
 	}
 
@@ -289,16 +306,19 @@
 		position: absolute;
 		bottom: 0;
 		right: 0;
+
 		display: flex;
 		align-items: center;
 		justify-content: start;
 		gap: 1rem;
-		font: var(--font-ui-medium);
-		color: var(--fg-3);
-		background-color: var(--bg-b);
+
 		width: 50%;
 		height: 4.8rem;
 		padding: 0 var(--padding-inset);
+
+		font: var(--font-ui-md);
+		color: var(--fg-3);
+		background-color: var(--bg-b);
 	}
 
 	.universal .contents,

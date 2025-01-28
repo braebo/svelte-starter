@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { fade } from 'svelte/transition';
+	import { fade } from 'svelte/transition'
 
-	let { onclose }: { onclose?: () => void } = $props();
+	let { onclose }: { onclose?: () => void } = $props()
 </script>
 
 <div
@@ -16,12 +16,15 @@
 		position: fixed;
 		top: 0;
 		left: 0;
-		z-index: 99;
-		opacity: 0.7;
-		pointer-events: auto;
+
 		width: 100%;
 		height: 100%;
 		height: 100dvh;
+
+		opacity: 0.7;
 		background: var(--bg-a);
+
+		pointer-events: auto;
+		z-index: 99;
 	}
 </style>

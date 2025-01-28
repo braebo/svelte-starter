@@ -1,32 +1,32 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	import type { NavigationLink } from '../types';
-	import { onMount } from 'svelte';
+	import type { Route } from '$lib/routes'
+	import { page } from '$app/stores'
+	import { onMount } from 'svelte'
 
-	let { title, contents = [] }: { title: string; contents: NavigationLink['sections'] } = $props();
+	let { title, contents = [] }: { title: string; contents: Route['sections'] } = $props()
 
-	let nav = $state() as HTMLElement;
+	let nav = $state() as HTMLElement
 
 	onMount(() => {
-		scrollToActive();
-	});
+		scrollToActive()
+	})
 
 	export async function scrollToActive() {
-		const active = nav.querySelector('[aria-current="page"]') as HTMLElement;
+		const active = nav.querySelector('[aria-current="page"]') as HTMLElement
 
 		if (!active) {
-			nav.scrollTop = 0;
-			return;
+			nav.scrollTop = 0
+			return
 		}
 
-		const nav_center = nav.offsetHeight / 2;
-		const child_center = active.offsetHeight / 2;
-		const offset_top = active.offsetTop;
-		const scroll_position = offset_top - nav_center + child_center;
+		const nav_center = nav.offsetHeight / 2
+		const child_center = active.offsetHeight / 2
+		const offset_top = active.offsetTop
+		const scroll_position = offset_top - nav_center + child_center
 
-		const update_scroll = () => (nav.scrollTop = scroll_position);
+		const update_scroll = () => (nav.scrollTop = scroll_position)
 
-		requestAnimationFrame(update_scroll);
+		requestAnimationFrame(update_scroll)
 	}
 </script>
 
@@ -35,9 +35,9 @@
 		<section>
 			<h2>{title} • {section.title}</h2>
 
-			{#if section.sections.length !== 0}
+			{#if section.sections?.length !== 0}
 				<ul>
-					{#each section.sections as { title, sections: subsections }}
+					{#each section.sections ?? [] as { title, sections: subsections }}
 						<li>
 							{#if title}
 								<h3>
@@ -46,9 +46,14 @@
 							{/if}
 
 							<ul>
-								{#each subsections as { path, title }}
+								{#each subsections ?? [] as { path, title }}
 									<li>
-										<a href={path} aria-current={path === $page.url.pathname ? 'page' : undefined}>
+										<a
+											href={path}
+											aria-current={path === $page.url.pathname
+												? 'page'
+												: undefined}
+										>
 											{title}
 										</a>
 									</li>
@@ -92,7 +97,7 @@
 	h3 {
 		display: block;
 		padding-bottom: 0.8rem;
-		font: var(--font-ui-medium);
+		font: var(--font-ui-md);
 		text-transform: uppercase;
 	}
 

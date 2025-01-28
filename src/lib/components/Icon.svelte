@@ -20,16 +20,20 @@ use an svg icon that was provided through `Icons.svelte` from
 <style>
 	svg {
 		position: relative;
-		overflow: hidden;
+
 		vertical-align: middle;
 		-o-object-fit: contain;
 		object-fit: contain;
-		-webkit-transform-origin: center center;
-		transform-origin: center center;
+
+		fill: none;
 		stroke: currentColor;
 		stroke-width: 2;
 		stroke-linecap: round;
 		stroke-linejoin: round;
-		fill: none;
+
+		-webkit-transform-origin: center center;
+		transform-origin: center center;
+
+		overflow: hidden;
 	}
 </style>

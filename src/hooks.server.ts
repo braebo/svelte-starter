@@ -10,7 +10,10 @@ export const handle: Handle = ({ event, resolve }) => {
 		transformPageChunk: ({ html, done }) => {
 			page += html
 			if (done)
-				return page.replace('__THEME__', event.locals.theme).replace('__COLOR_SCHEME__', event.locals.theme)
+				return page
+					.replace('__THEME__', event.locals.theme)
+					.replace('__COLOR_SCHEME__', event.locals.theme)
+
 		},
 	})
 }

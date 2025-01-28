@@ -15,7 +15,8 @@
 		Svelte Starter comes with sane defaults for vanilla HTML elements with a minimal CSS reset.
 	</p>
 
-	<div class="br-md" />
+	<div class="br-md"></div>
+
 	<h3>Tokens & Utilities</h3>
 
 	<p>
@@ -23,7 +24,7 @@
 		design tokens available, like the theme colors, font definitions, and spacing scale.
 	</p>
 
-	<div class="br-md" />
+	<div class="br-md"></div>
 
 	<h4>Stats</h4>
 

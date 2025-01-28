@@ -5,56 +5,11 @@
 </script>
 
 <div class="page">
+	<h1 class="page-title">Elements</h1>
+	<div class="br-md"></div>
+
 	<section in:fly|global={{ ...IN, y: 7.5, duration: 300 }} out:fade|global={OUT}>
-		<h1>Heading 1</h1>
-		<h2>Heading 2</h2>
-		<h3>Heading 3</h3>
-		<h4>Heading 4</h4>
-		<h5>Heading 5</h5>
-		<h6>Heading 6</h6>
-
-		<strong>bold</strong>
-
-		<em>italic</em>
-
-		<s>strikethrough</s>
-
-		<small>small</small>
-
-		<mark>mark</mark>
-
-		<span>
-			super
-			<sup>script</sup>
-		</span>
-
-		<span>
-			sub
-			<sub>script</sub>
-		</span>
-
-		<ul>
-			<li>
-				list
-				<ul>
-					<li>
-						list
-						<ul>
-							<li>list</li>
-						</ul>
-					</li>
-					<li>
-						list
-						<ol>
-							<li>list</li>
-							<li>list</li>
-						</ol>
-					</li>
-				</ul>
-			</li>
-		</ul>
-
-		<button>button</button>
+		<button>Button</button>
 
 		<code>code</code>
 
@@ -80,11 +35,6 @@ console.log('some really long string that would usually cause a horizontal scrol
 			Paragraph canary danced beneath <a href="">azure skies</a>, while marble fountains sparkled with untold mysteries. Velvet shadows crept along ancient walls, whispering secrets to passing travelers who dared not linger.
 		</p>
 
-		<!-- prettier-ignore -->
-		<p>
-			Nor is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but occasionally circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure?
-		</p>
-
 		<!-- svelte-ignore a11y_invalid_attribute -->
 		<!-- prettier-ignore -->
 		<blockquote> Blockquote golden leaves tumbled through forgotten courtyards, each one carrying <a href="">fragments of memories</a> long since scattered to the winds.</blockquote>
@@ -94,6 +44,54 @@ console.log('some really long string that would usually cause a horizontal scrol
 			https://some.really-long-link-that-would-normally-cause-horizontal-overflow-but-it-wraps-instead
 		</a>
 	</section>
+
+	<h1>Heading 1</h1>
+	<h2>Heading 2</h2>
+	<h3>Heading 3</h3>
+	<h4>Heading 4</h4>
+	<h5>Heading 5</h5>
+	<h6>Heading 6</h6>
+
+	<strong>bold</strong>
+
+	<em>italic</em>
+
+	<s>strikethrough</s>
+
+	<small>small</small>
+
+	<mark>mark</mark>
+
+	<span>
+		super
+		<sup>script</sup>
+	</span>
+
+	<span>
+		sub
+		<sub>script</sub>
+	</span>
+
+	<ul>
+		<li>
+			list
+			<ul>
+				<li>
+					list
+					<ul>
+						<li>list</li>
+					</ul>
+				</li>
+				<li>
+					list
+					<ol>
+						<li>list</li>
+						<li>list</li>
+					</ol>
+				</li>
+			</ul>
+		</li>
+	</ul>
 
 	<Inputs />
 </div>
@@ -106,7 +104,7 @@ console.log('some really long string that would usually cause a horizontal scrol
 		flex-direction: column;
 		flex-wrap: wrap;
 
-		width: min(var(--page-width), calc(100vw - 2rem));
+		width: 100%;
 		height: auto;
 		margin: 0 auto;
 	}

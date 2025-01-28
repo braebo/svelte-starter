@@ -1,24 +1,24 @@
 <script lang="ts">
-	// import NavMobile from '$lib/components/header/navs/NavMobile.svelte'
-	// import Header from '$lib/components/header/Header.svelte'
-	import PageTitle from '$lib/components/PageTitle.svelte'
-	// import { device } from '$lib/utils/device.svelte'
+	import Shell from '$lib/components/Shell.svelte'
 	import Nav from '$lib/components/nav/Nav.svelte'
+	import Gooey from '$lib/components/Gooey.svelte'
+	import { BROWSER, DEV } from 'esm-env'
 	import '../styles/app.scss'
 
-	let { data, children } = $props()
+	let { data, children: layout_children } = $props()
 </script>
 
-<PageTitle />
+<Shell>
+	{#snippet top_nav()}
+		<Nav home_title="home" title={data.title} links={data.routes} />
+		<div class="br-lg" />
+	{/snippet}
 
-<!-- <Header /> -->
+	{#snippet children()}
+		{@render layout_children()}
+	{/snippet}
+</Shell>
 
-<br-md />
-
-{@render children?.()}
-
-<!-- {#if device.mobile}
-	<NavMobile />
-{/if} -->
-
-<Nav home_title="home" title={data.title} links={data.routes} />
+{#if DEV && BROWSER}
+	<Gooey />
+{/if}

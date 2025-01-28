@@ -2,9 +2,9 @@
 Accessibility helper component to skip to the main content
 -->
 <script lang="ts">
-	import type { Snippet } from 'svelte';
+	import type { Snippet } from 'svelte'
 
-	let { href, children }: { href: string; children?: Snippet } = $props();
+	let { href, children }: { href: string; children?: Snippet } = $props()
 </script>
 
 <a {href}>
@@ -13,17 +13,22 @@ Accessibility helper component to skip to the main content
 
 <style>
 	a {
+		position: absolute;
 		display: flex;
 		align-items: center;
-		background: var(--bg-a);
-		color: inherit;
+
 		height: calc(var(--nav-height) - 2rem);
 		padding: 0 1rem;
-		position: absolute;
+
+		background: var(--bg-a);
+		color: inherit;
+
+		font: var(--font-ui-md);
+
 		inset-block-start: 1rem;
 		inset-inline-start: 1rem;
 		transform: translateY(-999px);
-		font: var(--font-ui-medium);
+
 		z-index: 1000; /* 1 more than the banner z-index */
 	}
 

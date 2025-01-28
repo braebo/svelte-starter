@@ -43,11 +43,12 @@
 <style lang="scss">
 	.logo {
 		position: relative;
-		// width: 1.5rem;
+		display: flex;
+
+		aspect-ratio: 1;
 		width: var(--width);
 		max-width: var(--max-width);
-		// height: var(--width);
-		aspect-ratio: 1;
+		height: fit-content;
 
 		transition: 0.25s ease-out;
 		color: var(--fg-d);

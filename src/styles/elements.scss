@@ -26,6 +26,7 @@ blockquote {
 
 li {
 	margin-left: 1rem;
+	list-style-position: inside;
 }
 
 a {
@@ -67,7 +68,8 @@ blockquote {
 	}
 }
 
-button {
+button,
+.btn {
 	width: fit-content;
 	padding: var(--padding) calc(var(--padding) * 3);
 
@@ -90,6 +92,19 @@ button {
 		outline-color: var(--bg-e);
 		scale: 0.98;
 	}
+
+	&.accent {
+		color: var(--fg-a);
+		outline: 2px solid var(--theme-a);
+		outline-offset: -1px;
+
+		font-weight: 600;
+
+		&:hover {
+			background: color-mix(in hsl, var(--theme-a) 80%, var(--bg-a));
+			outline-color: var(--bg-d);
+		}
+	}
 }
 
 section {
@@ -98,7 +113,7 @@ section {
 	gap: var(--padding);
 
 	width: 100%;
-	max-width: min(var(--page-width), calc(100vw - var(--padding-inset)));
+	max-width: min(min(100%, var(--page-width)), calc(100vw - var(--padding-inset)));
 	margin: 0 auto;
 }
 

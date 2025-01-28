@@ -32,8 +32,8 @@
 		position: relative;
 		--duration: 0.25s;
 
-		--width: 7.2rem;
-		--padding: 0.4rem;
+		--width: 6.4rem;
+		--padding: 0.3rem;
 		--accent: #2196f3;
 
 		--thumb-size: 1.76rem;
@@ -60,6 +60,8 @@
 	/* Container */
 
 	.switch {
+		contain: strict;
+		
 		position: relative;
 		display: inline-block;
 
@@ -68,7 +70,8 @@
 		max-width: 100%;
 		max-height: 100%;
 
-		border-radius: var(--radius-md);
+		border-radius: var(--radius);
+		overflow: hidden;
 
 		cursor: pointer;
 
@@ -93,7 +96,7 @@
 
 		outline-width: 1.5px;
 		outline-style: solid;
-		border-radius: var(--radius-md);
+		border-radius: var(--radius);
 		box-shadow:
 			-1px 1px 0.528rem rgba(0, 0, 0, 0.33) inset,
 			0px 1px 0.16rem rgba(0, 0, 0, 0.33) inset;
