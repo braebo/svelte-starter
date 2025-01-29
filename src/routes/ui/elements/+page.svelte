@@ -6,7 +6,10 @@
 
 <div class="page">
 	<h1 class="page-title">Elements</h1>
-	<div class="br-md"></div>
+
+	<div class="br-xs"></div>
+
+	<p>The most common HTML elements as they are styled by default, with a minimal CSS reset.</p>
 
 	<section in:fly|global={{ ...IN, y: 7.5, duration: 300 }} out:fade|global={OUT}>
 		<button>Button</button>
@@ -103,14 +106,10 @@ console.log('some really long string that would usually cause a horizontal scrol
 		display: flex;
 		flex-direction: column;
 		flex-wrap: wrap;
+		gap: var(--gap);
 
 		width: 100%;
 		height: auto;
 		margin: 0 auto;
-	}
-
-	section {
-		width: 640px;
-		margin: 1rem auto;
 	}
 </style>

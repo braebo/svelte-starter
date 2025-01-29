@@ -6,11 +6,12 @@
 	import type { Route } from '$lib/routes'
 
 	import { nav_state } from './nav_state.svelte'
-	import Mobile from './Nav.Mobile.svelte'
 	import Logo from '../header/Logo.svelte'
+	import { page } from '$app/state'
+
+	import Mobile from './Nav.Mobile.svelte'
 	import Links from './Nav.Links.svelte'
 	import Menu from './Nav.Menu.svelte'
-	import { page } from '$app/state'
 
 	let {
 		title,

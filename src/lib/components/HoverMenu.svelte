@@ -8,7 +8,7 @@
 	{@render children()}
 </div>
 
-<style>
+<style lang="scss">
 	.hover-menu-outer {
 		display: flex;
 		flex-wrap: nowrap;
@@ -18,29 +18,28 @@
 			text-decoration: 1px underline var(--theme-a);
 		}
 
-		:global {
-			a,
-			button {
-				display: block;
+		:global(a),
+		:global(button) {
+			display: block;
 
-				width: 100%;
-				padding: 1rem 1.5rem;
+			width: 100%;
+			padding: 1rem 1.5rem;
 
-				color: inherit;
-				border-radius: var(--radius);
-				border-top-left-radius: 0;
-				border-top-right-radius: 0;
+			color: inherit;
+			// border-radius: var(--radius);
+			// border-top-left-radius: 0;
+			// border-top-right-radius: 0;
 
-				font: var(--font-ui-md);
-				text-decoration: none;
-				line-height: 1;
-				text-align: left;
-			}
+			font: var(--font-ui-md);
+			text-decoration: none;
+			line-height: 1;
+			text-align: left;
+		}
 
-			a:hover,
-			button:hover {
-				background-color: var(--bg-c);
-			}
+		:global(a:hover),
+		:global(button:hover) {
+			// background-color: var(--bg-c);
+			box-shadow: inset 0 -1px 0 0 var(--theme-a);
 		}
 	}
 </style>

@@ -15,6 +15,7 @@
 <div class="links">
 	{#each links as link}
 		{@const active = page.url.pathname.startsWith(`${link.path}`)}
+
 		{#if link.sections?.[0].path}
 			<Dropdown force_open={active}>
 				<div class="link-wrapper">
@@ -33,6 +34,7 @@
 							{@const active =
 								page.url.pathname === section.path ||
 								page.url.pathname.startsWith(section.path)}
+
 							<a
 								class="secondary"
 								href={section.path}
@@ -46,7 +48,7 @@
 				{/snippet}
 			</Dropdown>
 		{:else}
-			<a href={link.path} aria-current={active ? 'page' : null}>
+			<a href={link.path} aria-current={active ? 'page' : null} class:active>
 				{link.title}
 			</a>
 		{/if}
@@ -103,8 +105,11 @@
 			font: var(--font-ui);
 			white-space: nowrap;
 
+			box-shadow: inset 0 -1px 0 0 transparent;
+			transition: box-shadow 0.2s;
+
 			&:hover {
-				box-shadow: inset 0 -1px 0 0 var(--fg-a);
+				box-shadow: inset 0 -1px 0 0 var(--bg-c);
 			}
 
 			&[aria-current='page'] {
@@ -117,13 +122,13 @@
 			}
 
 			&.secondary {
-				box-shadow: none;
+				// box-shadow: none;
 				font: var(--font-ui-sm);
 
-				&.active {
-					text-decoration: 1px underline var(--theme-a);
-					text-underline-offset: 1rem;
-				}
+				// &.active {
+				// 	text-decoration: 1px underline var(--theme-a);
+				// 	text-underline-offset: 1rem;
+				// }
 			}
 		}
 	}
@@ -134,4 +139,4 @@
 			transform: translateX(0);
 		}
 	}
-</style> 
+</style>

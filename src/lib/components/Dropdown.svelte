@@ -62,7 +62,6 @@
 
 	.dropdown-content {
 		position: absolute;
-		left: -1rem;
 		top: calc(var(--nav-height));
 
 		border-radius: var(--border-radius);
@@ -90,7 +89,6 @@
 	.dropdown.open {
 		.dropdown-content {
 			opacity: 1;
-			// transform: translateY(0);
 			clip-path: inset(0);
 			pointer-events: all;
 		}

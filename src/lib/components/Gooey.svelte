@@ -1,3 +1,8 @@
+<!-- @component
+	A gooey instance for debugging state.
+	Press `1` to toggle visibility.
+-->
+
 <script lang="ts">
 	import { nav_state } from '$lib/components/nav/nav_state.svelte'
 	import { onDestroy, onMount } from 'svelte'
