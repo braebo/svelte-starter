@@ -48,7 +48,7 @@ The main shell of the application. It provides a slot for the top navigation, th
 		position: relative;
 
 		height: 100%;
-		margin: 0 auto;
+		max-width: 100%;
 
 		padding: 0;
 	}

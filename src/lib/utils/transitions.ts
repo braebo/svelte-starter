@@ -3,8 +3,8 @@ import type { FlyParams, FadeParams } from 'svelte/transition'
 import { cubicOut, cubicIn, quintOut } from 'svelte/easing'
 import { fly, fade } from 'svelte/transition'
 
-export const IN = { duration: 150, delay: 75, easing: quintOut }
-export const OUT = { duration: 75, delay: 0, easing: quintOut }
+export const IN = { duration: 150, delay: 100, easing: quintOut }
+export const OUT = { duration: 100, delay: 0, easing: quintOut }
 
 const duration = 75
 const delay = 75
