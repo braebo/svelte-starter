@@ -1,15 +1,16 @@
 {
 	"recommendations": [
 		/*
-		 * Important extentions
+		 * Important extentions.
 		 */
 		"christian-kohler.path-intellisense",
 		"aaron-bond.better-comments",
+		"ethansk.restore-terminals",
 		"svelte.svelte-vscode",
-		"unifiedjs.vscode-mdx" // MDSvex Language Support
+		"unifiedjs.vscode-mdx" // mdsvex
 
 		/*
-		 * Honorable mentions
+		 * Honorable mentions.
 		 */
 		// "github.vscode-pull-request-github",
 		// "ardenivanov.svelte-intellisense",

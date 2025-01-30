@@ -1,4 +1,31 @@
 {
+	"restoreTerminals.terminals": [
+		{
+			"splitTerminals": [
+				{
+					"name": "server",
+					"commands": ["pnpm i && pnpm dev"]
+				},
+				{
+					"name": "svelte-check",
+					"commands": ["pnpm check:watch"]
+				},
+				{
+					"name": "vitest ui",
+					"commands": ["pnpm test"]
+				}
+			]
+		},
+		{
+			"splitTerminals": [
+				{
+					"name": "build",
+					"commands": ["pnpm build"]
+				}
+			]
+		}
+	],
+
 	"css.lint.vendorPrefix": "ignore",
 	"scss.lint.vendorPrefix": "ignore",
 
