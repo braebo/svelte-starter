@@ -1,9 +1,12 @@
-import { routes } from '$lib/routes'
+import { routes } from '$lib/router'
 
 export const prerender = true
 
 export const load = async ({ url, locals }) => {
-	const title = routes.find((link) => link.path === url.pathname.split('/')[1]!)?.title ?? ''
+	const title =
+		Object.entries(routes).find(
+			([_, link]) => link.path === url.pathname.split('/')[1]!,
+		)?.[0] ?? ''
 
 	return {
 		title,

@@ -3,7 +3,8 @@
 -->
 
 <script lang="ts">
-	import type { Route } from '$lib/routes'
+	import type { Route } from '$lib/router'
+
 	import HoverMenu from '$lib/components/HoverMenu.svelte'
 	import Dropdown from '$lib/components/Dropdown.svelte'
 	import Icon from '$lib/components/Icon.svelte'
@@ -16,11 +17,11 @@
 	{#each links as link}
 		{@const active = page.url.pathname.startsWith(`${link.path}`)}
 
-		{#if link.sections?.[0].path}
+		{#if link.children?.[0].path}
 			<Dropdown force_open={active}>
 				<div class="link-wrapper">
 					<a href={link.path} aria-current={active ? 'page' : null} class:active>
-						{link.title}
+						{link.path}
 					</a>
 
 					<div class="chevron">
@@ -30,18 +31,18 @@
 
 				{#snippet dropdown()}
 					<HoverMenu>
-						{#each link.sections! as section}
+						{#each link.children ?? [] as child}
 							{@const active =
-								page.url.pathname === section.path ||
-								page.url.pathname.startsWith(section.path)}
+								page.url.pathname === child.path ||
+								page.url.pathname.startsWith(child.path)}
 
 							<a
 								class="secondary"
-								href={section.path}
+								href={child.path}
 								aria-current={active ? 'page' : null}
 								class:active
 							>
-								{section.title}
+								{child.title}
 							</a>
 						{/each}
 					</HoverMenu>
@@ -49,7 +50,7 @@
 			</Dropdown>
 		{:else}
 			<a href={link.path} aria-current={active ? 'page' : null} class:active>
-				{link.title}
+				{link.path}
 			</a>
 		{/if}
 	{/each}
@@ -122,13 +123,15 @@
 			}
 
 			&.secondary {
-				// box-shadow: none;
-				font: var(--font-ui-sm);
+				&:first-of-type {
+					border-left: 1px solid var(--bg-c);
 
-				// &.active {
-				// 	text-decoration: 1px underline var(--theme-a);
-				// 	text-underline-offset: 1rem;
-				// }
+					&.active {
+						border-left: 1px solid var(--theme-a);
+					}
+				}
+
+				font: var(--font-ui-sm);
 			}
 		}
 	}

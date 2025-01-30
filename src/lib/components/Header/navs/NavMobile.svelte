@@ -5,7 +5,7 @@
 	import { fly, fade } from 'svelte/transition'
 	import Burger from './Mobile/Burger.svelte'
 	import { quintOut } from 'svelte/easing'
-	import { routes } from '$lib/routes'
+	import { routes } from '$lib/router'
 	import { page } from '$app/stores'
 
 	let showMenu = $state(false)

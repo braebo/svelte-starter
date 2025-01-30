@@ -3,7 +3,7 @@
 -->
 
 <script lang="ts">
-	import type { Route } from '$lib/routes'
+	import type { Route } from '$lib/router'
 
 	import { nav_state } from './nav_state.svelte'
 	import Logo from '../header/Logo.svelte'
@@ -47,7 +47,8 @@
 
 <style lang="scss">
 	nav {
-		contain: layout size style;
+		// contain: layout size style;
+		view-transition-name: nav;
 
 		position: fixed;
 		display: flex;
@@ -65,7 +66,7 @@
 		background-color: var(--bg-a);
 
 		user-select: none;
-		isolation: isolate;
+		// isolation: isolate;
 		z-index: 101;
 
 		&::after {
@@ -79,7 +80,7 @@
 
 			background: linear-gradient(to top, rgba(0, 0, 0, 0.05), transparent);
 			z-index: -1;
-			isolation: isolate;
+			// isolation: isolate;
 		}
 	}
 

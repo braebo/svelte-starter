@@ -1,15 +1,15 @@
 <script lang="ts">
+	import { routes } from '$lib/router'
 	import { fly } from 'svelte/transition'
-	import { routes } from '$lib/routes'
-	import { page } from '$app/stores'
+	import { page } from '$app/state'
 </script>
 
 <nav>
 	<ul>
-		{#each routes as { path, title }, i (title)}
+		{#each Object.entries(routes) as [title, { path }], i}
 			<li
-				class:active={$page.url.pathname === path}
-				style:animation-delay={`${routes.length * 0.1 - (i % 2) * 0.1}s`}
+				class:active={page.url.pathname === path}
+				style:animation-delay={`${Object.keys(routes).length * 0.1 - (i % 2) * 0.1}s`}
 				out:fly|global={{ y: -20, duration: 300 }}
 			>
 				<a data-sveltekit-prefetch href={path}>{title}</a>

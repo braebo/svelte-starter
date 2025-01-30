@@ -3,7 +3,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 -->
 
 <script lang="ts">
-	import type { Route } from '$lib/routes'
+	import type { Route } from '$lib/router'
 
 	import ThemeSwitch from '$lib/components/ThemeSwitch.svelte'
 	import FontToggle from '$lib/components/FontToggle.svelte'

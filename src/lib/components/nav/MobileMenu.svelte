@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { TransitionConfig } from 'svelte/transition'
-	import type { Route } from '$lib/routes'
+	import type { Route } from '$lib/router'
 
 	import ModalOverlay from '$lib/components/ModalOverlay.svelte'
 	import MobileSubMenu from './MobileSubMenu.svelte'
@@ -18,7 +18,7 @@
 
 	let { links, current, onclose }: Props = $props()
 
-	let show_context_menu = $state(!!current?.sections)
+	let show_context_menu = $state(!!current?.children)
 
 	let nav_context_instance: ReturnType<typeof MobileSubMenu> | undefined = $state()
 
@@ -110,7 +110,7 @@
 										{link.title}
 									</a>
 
-									{#if link.sections}
+									{#if link.children}
 										<button
 											class="raised icon"
 											onclick={async (event) => {
@@ -153,7 +153,7 @@
 						<MobileSubMenu
 							bind:this={nav_context_instance}
 							title={current.title}
-							contents={current.sections}
+							contents={current.children}
 						/>
 					{/if}
 				</div>

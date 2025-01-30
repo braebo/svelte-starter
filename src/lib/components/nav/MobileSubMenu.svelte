@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type { Route } from '$lib/routes'
+	import type { Route } from '$lib/router'
 	import { page } from '$app/stores'
 	import { onMount } from 'svelte'
 
-	let { title, contents = [] }: { title: string; contents: Route['sections'] } = $props()
+	let { title, contents = [] }: { title: string; contents: Route['children'] } = $props()
 
 	let nav = $state() as HTMLElement
 
@@ -31,13 +31,13 @@
 </script>
 
 <nav bind:this={nav}>
-	{#each contents as section}
+	{#each contents as child}
 		<section>
-			<h2>{title} • {section.title}</h2>
+			<h2>{title} • {child.title}</h2>
 
-			{#if section.sections?.length !== 0}
+			{#if child.children?.length !== 0}
 				<ul>
-					{#each section.sections ?? [] as { title, sections: subsections }}
+					{#each child.children ?? [] as { path, title }}
 						<li>
 							{#if title}
 								<h3>
@@ -46,7 +46,7 @@
 							{/if}
 
 							<ul>
-								{#each subsections ?? [] as { path, title }}
+								{#each child.children ?? [] as { path, title }}
 									<li>
 										<a
 											href={path}

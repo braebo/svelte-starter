@@ -42,6 +42,11 @@
 				opacity: 0;
 				transform: scale(0);
 				animation: pop-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+				box-shadow: none;
+
+				&:hover {
+					box-shadow: 0 1px var(--theme-a);
+				}
 
 				&:nth-of-type(1) {
 					animation-delay: 0.4s;
@@ -99,28 +104,30 @@
 		}
 
 		[data-icon] {
-			background: no-repeat 50% 50%;
-			background-size: calc(100% - 1rem) auto;
-			padding: 0 0.5rem;
+			width: 3rem;
 			height: 100%;
+			padding: 0 0.5rem;
+
+			background-color: var(--fg-e);
+
+			mask-repeat: no-repeat;
+			mask-position: 50% 50%;
+			mask-size: calc(100% - 1rem) auto;
+
+			transition: background-color 0.15s;
+
+			&:hover {
+				background-color: var(--theme-a);
+			}
 		}
 
 		[data-icon='bluesky'] {
-			width: 3rem;
-			background-image: url('$lib/icons/bluesky-dark.svg');
-
-			:global(:root.light) & {
-				background-image: url('$lib/icons/bluesky-light.svg');
-			}
+			mask-image: url('$lib/icons/bluesky.svg');
 		}
 
 		[data-icon='github'] {
 			width: 3rem;
-			background-image: url('$lib/icons/github-dark.svg');
-
-			:global(:root.light) & {
-				background-image: url('$lib/icons/github-light.svg');
-			}
+			mask-image: url('$lib/icons/github.svg');
 		}
 	}
 </style>

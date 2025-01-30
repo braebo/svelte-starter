@@ -1,16 +1,23 @@
 <script>
-	import { IN, OUT } from '$lib/utils/transitions'
-	import { fade, fly } from 'svelte/transition'
+	import Page from '$lib/components/Page.svelte'
+	import { router } from '$lib/router'
 </script>
 
-<div class="br-md" />
+<Page title="Inputs">
+	<p>Stock HTML input elements with basic styles.</p>
 
-<div class="page flex">
-	<section
-		style:gap="1.5rem"
-		in:fly|global={{ ...IN, y: 7.5, duration: 300, delay: 150 }}
-		out:fade|global={OUT}
-	>
+	<p>
+		<sub
+			>ℹ
+			<a href={router.gh('src/styles/inputs.scss')} target="_blank" data-sveltekit-reload>
+				inputs.scss
+			</a>
+		</sub>
+	</p>
+
+	<div class="br-lg"></div>
+
+	<section style:gap="1.5rem">
 		<label>
 			<div>text</div>
 			<input type="text" placeholder="foo" />
@@ -49,10 +56,4 @@
 			</select>
 		</label>
 	</section>
-</div>
-
-<style lang="scss">
-	section {
-		width: 25rem;
-	}
-</style>
+</Page>
