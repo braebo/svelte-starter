@@ -18,10 +18,6 @@ blockquote {
 	@media screen and (max-width: 560px) {
 		word-wrap: break-word;
 	}
-
-	a {
-		color: var(--fg-c);
-	}
 }
 
 li {
@@ -32,12 +28,13 @@ li {
 a {
 	color: color-mix(in lab, var(--fg-a), var(--theme-a) 33%);
 
-	text-decoration: underline;
-	text-decoration-color: var(--bg-d);
+	width: fit-content;
+	text-decoration: none;
+	box-shadow: 0 1px var(--bg-e);
+	transition: 0.1s ease-out;
 
 	&:hover {
-		text-decoration: underline;
-		text-decoration-color: var(--theme-a);
+		box-shadow: 0 1px var(--theme-a);
 	}
 }
 
@@ -113,7 +110,7 @@ section {
 	gap: var(--padding);
 
 	width: 100%;
-	max-width: min(min(100%, var(--page-width)), calc(100vw - var(--padding-inset)));
+	max-width: min(var(--page-width), calc(100vw - var(--padding-inset)));
 	margin: 0 auto;
 }
 
@@ -128,4 +125,19 @@ mark {
 	padding: 0 var(--padding);
 
 	clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+}
+
+sup a,
+sub a {
+	font: inherit;
+}
+
+em {
+	font-style: italic !important;
+	font-synthesis: style;
+	opacity: 0.8;
+
+	a {
+		font-style: italic;
+	}
 }

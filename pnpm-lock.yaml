@@ -86,6 +86,9 @@ importers:
       svelte-check:
         specifier: ^4.1.4
         version: 4.1.4(picomatch@4.0.2)(svelte@5.19.3)(typescript@5.7.3)
+      sveltekit-view-transition:
+        specifier: ^0.5.3
+        version: 0.5.3(@sveltejs/kit@2.16.1(@sveltejs/vite-plugin-svelte@5.0.3(svelte@5.19.3)(vite@6.0.11(@types/node@22.10.10)(jiti@1.21.6)(lightningcss@1.28.1)(sass-embedded@1.83.4)(sass@1.80.6)))(svelte@5.19.3)(vite@6.0.11(@types/node@22.10.10)(jiti@1.21.6)(lightningcss@1.28.1)(sass-embedded@1.83.4)(sass@1.80.6)))(svelte@5.19.3)
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -1717,6 +1720,18 @@ packages:
   svelte@5.19.3:
     resolution: {integrity: sha512-rb/bkYG9jq67OCWikMvaPnfOobyGn0JizVDwHpdeBtLiNXPMcoA9GTFC3BhptP7xGNquUU8J5GiS7PlGlfDAFA==}
     engines: {node: '>=18'}
+
+  sveltekit-view-transition@0.5.3:
+    resolution: {integrity: sha512-qm8NDhpgIyiM3TJfO26iMGZWcWW3/GqsX9KctNWJaZ5ySdnkzZ4p74fkYWelaM2LLEpLDJqzouQLyrgnbszfVA==}
+    peerDependencies:
+      '@sveltejs/kit': ^1.20.4 || ^2.0.0
+      svelte: ^4.0.0 || ^5.0.0
+
+  sveltekit-view-transition@0.5.3:
+    resolution: {integrity: sha512-qm8NDhpgIyiM3TJfO26iMGZWcWW3/GqsX9KctNWJaZ5ySdnkzZ4p74fkYWelaM2LLEpLDJqzouQLyrgnbszfVA==}
+    peerDependencies:
+      '@sveltejs/kit': ^1.20.4 || ^2.0.0
+      svelte: ^4.0.0 || ^5.0.0
 
   sync-child-process@1.0.2:
     resolution: {integrity: sha512-8lD+t2KrrScJ/7KXCSyfhT3/hRq78rC0wBFqNJXv3mZyn6hW2ypM05JmlSvtqRbeq6jqA94oHbxAr2vYsJ8vDA==}
@@ -3496,6 +3511,16 @@ snapshots:
       locate-character: 3.0.0
       magic-string: 0.30.17
       zimmerframe: 1.1.2
+
+  sveltekit-view-transition@0.5.3(@sveltejs/kit@2.16.1(@sveltejs/vite-plugin-svelte@5.0.3(svelte@5.19.3)(vite@6.0.11(@types/node@22.10.10)(jiti@1.21.6)(lightningcss@1.28.1)(sass-embedded@1.83.4)(sass@1.80.6)))(svelte@5.19.3)(vite@6.0.11(@types/node@22.10.10)(jiti@1.21.6)(lightningcss@1.28.1)(sass-embedded@1.83.4)(sass@1.80.6)))(svelte@5.19.3):
+    dependencies:
+      '@sveltejs/kit': 2.16.1(@sveltejs/vite-plugin-svelte@5.0.3(svelte@5.19.3)(vite@6.0.11(@types/node@22.10.10)(jiti@1.21.6)(lightningcss@1.28.1)(sass-embedded@1.83.4)(sass@1.80.6)))(svelte@5.19.3)(vite@6.0.11(@types/node@22.10.10)(jiti@1.21.6)(lightningcss@1.28.1)(sass-embedded@1.83.4)(sass@1.80.6))
+      svelte: 5.19.3
+
+  sveltekit-view-transition@0.5.3(@sveltejs/kit@2.16.1(@sveltejs/vite-plugin-svelte@5.0.3(svelte@5.19.3)(vite@6.0.11(@types/node@22.10.10)(jiti@1.21.6)(lightningcss@1.28.1)(sass-embedded@1.83.4)(sass@1.80.6)))(svelte@5.19.3)(vite@6.0.11(@types/node@22.10.10)(jiti@1.21.6)(lightningcss@1.28.1)(sass-embedded@1.83.4)(sass@1.80.6)))(svelte@5.19.3):
+    dependencies:
+      '@sveltejs/kit': 2.16.1(@sveltejs/vite-plugin-svelte@5.0.3(svelte@5.19.3)(vite@6.0.11(@types/node@22.10.10)(jiti@1.21.6)(lightningcss@1.28.1)(sass-embedded@1.83.4)(sass@1.80.6)))(svelte@5.19.3)(vite@6.0.11(@types/node@22.10.10)(jiti@1.21.6)(lightningcss@1.28.1)(sass-embedded@1.83.4)(sass@1.80.6))
+      svelte: 5.19.3
 
   sync-child-process@1.0.2:
     dependencies:

@@ -1,6 +1,8 @@
 @use './reset.scss';
 @use './theme.scss';
 
+@use './view-transitions.scss';
+@use './animations.scss';
 @use './dimensions.scss';
 @use './elements.scss';
 @use './shadows.scss';
@@ -9,19 +11,7 @@
 @use './font.scss';
 @use './code.scss';
 
-$mobile: 900px;
-
 :root {
-	--mobile: #{$mobile};
-
-	--radius-sm: 0.3rem;
-	--radius: 0.5rem;
-	--radius-md: 0.7rem;
-	--radius-lg: 1rem;
-
-	--padding: 0.8rem;
-	--gap: 2rem;
-
 	--bg-ab: color-mix(in lab, var(--bg-a), var(--bg-b) 20%);
 
 	&.light {

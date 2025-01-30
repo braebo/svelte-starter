@@ -48,3 +48,9 @@ code {
 		font-style: var(--h-light-font-style);
 	}
 }
+
+pre[data-shiki-t-inline] {
+	display: inline-flex;
+	padding: 0.25rem 0.5rem;
+	padding: 0 0.5rem;
+}
