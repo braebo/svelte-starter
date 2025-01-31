@@ -3,11 +3,11 @@
 	animation-duration: 0s;
 }
 
-@view-transition {
-	navigation: auto;
-}
-@media (prefers-reduced-motion) {
-	@view-transition {
-		navigation: none;
-	}
-}
+// @view-transition {
+// 	navigation: auto;
+// }
+// @media (prefers-reduced-motion) {
+// 	@view-transition {
+// 		navigation: none;
+// 	}
+// }

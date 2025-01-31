@@ -46,15 +46,17 @@ describe('router', () => {
 		expect(isntActive, 'Child path is active, but parent is not.').toBe(false)
 	})
 
-	test('router.childActive()', () => {
-		const page = mock_page('/foo/bar')
-		const hasActiveChild = router.childActive('/foo', page)
-		expect(hasActiveChild, `'/foo' is not a child of ${page.url.pathname}`).toBe(true)
+	test('router.isParent()', () => {
+		const hasActiveChild = router.isParent('/foo', mock_page('/foo/bar'))
+		expect(hasActiveChild, `'/foo' is not a parent of ${page.url.pathname}`).toBe(true)
+
+		const hasActiveChild2 = router.isChild('/foo/bar', mock_page('/'))
+		expect(hasActiveChild2, `'/foo/bar' is not a child of '/'`).toBe(false)
 	})
 
-	test('router.parentActive()', () => {
-		const hasActiveParent = router.parentActive('/foo/baz', page)
-		expect(hasActiveParent, `'/foo/baz' is not a parent of ${page.url.pathname}`).toBe(true)
+	test('router.isChild()', () => {
+		const hasActiveParent = router.isChild('/foo/baz', page)
+		expect(hasActiveParent, `'/foo/baz' is not a child of ${page.url.pathname}`).toBe(true)
 	})
 
 	test('router.children()', () => {

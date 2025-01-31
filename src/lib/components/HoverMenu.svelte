@@ -26,9 +26,6 @@
 			padding: 1rem 1.5rem;
 
 			color: inherit;
-			// border-radius: var(--radius);
-			// border-top-left-radius: 0;
-			// border-top-right-radius: 0;
 
 			font: var(--font-ui-md);
 			text-decoration: none;
@@ -38,7 +35,6 @@
 
 		:global(a:hover),
 		:global(button:hover) {
-			// background-color: var(--bg-c);
 			box-shadow: inset 0 -1px 0 0 var(--theme-a);
 		}
 	}

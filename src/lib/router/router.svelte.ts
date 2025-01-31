@@ -1,15 +1,15 @@
 import type { Route, ExtractPaths, GetRouteByPath } from './router.types'
-import type { page } from '$app/state'
+import type { page as Page } from '$app/state'
 
-import { routes } from './routes'
+import { routes, type Routes } from '../routes'
 
 /**
- * @internal
+ * @deprecated Use the {@link router} singleton.
+ * @internal This class is only exported for testing purposes.
  */
-export class Router<const T extends Route[]> {
+export class Router<const T extends Route[] = Routes> {
 	readonly routes: T
 	readonly repo_url = 'https://github.com/braebo/svelte-starter' as const
-	readonly repo = `${this.repo_url}/tree/main` as const
 
 	constructor(routes: T) {
 		this.routes = routes
@@ -18,12 +18,12 @@ export class Router<const T extends Route[]> {
 	/**
 	 * Returns `true` if a given path is the same as the current page's.
 	 */
-	public isActive(path: ExtractPaths<T>, page_state: typeof page) {
-		return page_state.url.pathname === path
+	isActive(path: ExtractPaths<T> | (string & {}), page: typeof Page): boolean {
+		return page.url.pathname === path
 	}
 
 	/**
-	 * Returns `true` if the current page is a child of a given path.
+	 * Returns `true` if a given path is a parent of the current page.
 	 *
 	 * @example
 	 * ```ts
@@ -31,12 +31,12 @@ export class Router<const T extends Route[]> {
 	 *
 	 * import { page } from '$app/state'
 	 *
-	 * router.childActive('/foo', page) // true
-	 * router.childActive('/foo/baz', page) // false
+	 * router.isParent('/foo', page) // true
+	 * router.isParent('/foo/baz', page) // false
 	 * ```
 	 */
-	public childActive(path: ExtractPaths<T>, page_state: typeof page) {
-		return page_state.url.pathname.startsWith(path) && page_state.url.pathname !== path
+	isParent(path: ExtractPaths<T> | (string & {}), page: typeof Page): boolean {
+		return page.url.pathname.startsWith(path) && !this.isActive(path, page)
 	}
 
 	/**
@@ -52,9 +52,29 @@ export class Router<const T extends Route[]> {
 	 * router.parentActive('/baz', page) // false
 	 * ```
 	 */
-	public parentActive(path: ExtractPaths<T>, page_state: typeof page) {
-		const current = page_state.url.pathname
-		return path.startsWith(current) && path !== current
+	isChild(path: ExtractPaths<T> | (string & {}), page: typeof Page): boolean {
+		const current = page.url.pathname
+		if (current === '/' && path !== '/') return false
+		if (path === current) return false
+		return path.startsWith(current)
+	}
+
+	/**
+	 * Returns `true` if the current page is a sibling of a given path.
+	 *
+	 * @example
+	 * ```ts
+	 * // localhost:5173/foo/bar
+	 *
+	 * import { page } from '$app/state'
+	 *
+	 * router.siblingActive('/foo/baz', page) // true
+	 * router.siblingActive('/baz', page) // false
+	 * ```
+	 */
+	isSibling(path: ExtractPaths<T> | (string & {}), page: typeof Page): boolean {
+		const parent = path.split('/').slice(0, -1).join('/')
+		return page.url.pathname.startsWith(parent) && page.url.pathname !== parent
 	}
 
 	/**
@@ -65,19 +85,19 @@ export class Router<const T extends Route[]> {
 	 * router.get('/foo/bar') // { path: '/foo/bar', title: 'Bar', children: [] }
 	 * ```
 	 */
-	public get<P extends ExtractPaths<typeof this.routes>>(
-		path: P,
+	get<P extends ExtractPaths<typeof this.routes>>(
+		path: P | (string & {}),
 	): GetRouteByPath<typeof this.routes, P> {
 		const findRoute = (
 			routes: Route[],
 			targetPath: string,
 		): Array<Route>[number] | undefined => {
-			const direct = routes.find((route) => route.path === targetPath)
+			const direct = routes.find(route => route.path === targetPath)
 			if (direct) return direct
 
 			for (const route of routes) {
 				if ('children' in route && route.children) {
-					const found = route.children.find((child) => child.path === targetPath)
+					const found = route.children.find(child => child.path === targetPath)
 					if (found) return found
 				}
 			}
@@ -85,15 +105,28 @@ export class Router<const T extends Route[]> {
 
 		const found = findRoute(this.routes, path)
 		if (!found) throw new Error(`Route not found: ${path}`)
-		return found as GetRouteByPath<typeof this.routes, P>
+		// @ts-expect-error
+		return found
+	}
+
+	/**
+	 * A type-safe way to link to a route that just returns the given path.
+	 */
+	link<const P extends ExtractPaths<typeof this.routes>>(path: P): P {
+		return this.get(path).path
 	}
 
 	/**
 	 * Helper for linking to source files on GitHub.
 	 */
-	public gh<T extends string>(path: T extends `/${string}` ? never : T) {
-		return `${this.repo}/${path}` as const
+	gh<T extends string>(
+		path: T extends `/${string}` ? never : T,
+	): `${typeof this.repo_url}/tree/main/${T}` {
+		return `${this.repo_url}/tree/main/${path}`
 	}
 }
 
+/**
+ * A type-safe route manager with some helper methods.
+ */
 export const router = new Router(routes)

@@ -1,3 +1,5 @@
+import { isFirefox, isSafari } from '../ua'
+
 export const CONSOLE_COLOR_CODES = {
 	reset: '\x1b[0m',
 	// Foreground colors
@@ -26,6 +28,8 @@ export const CONSOLE_COLOR_CODES = {
 	underline: '\x1b[4m',
 } as const
 
+type AnsiKeyword = keyof typeof CONSOLE_COLOR_CODES
+
 // Simple hex to RGB conversion
 const hexToRgb = (hex: string): [number, number, number] | null => {
 	const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
@@ -36,20 +40,41 @@ const hexToRgb = (hex: string): [number, number, number] | null => {
 
 // Function to create hex color
 export const hex = (hexColor: string) => (str: string) => {
+	if (isSafari() || isFirefox()) return str
+
 	const rgb = hexToRgb(hexColor)
 	if (!rgb) return str
+
 	return `\x1b[38;2;${rgb[0]};${rgb[1]};${rgb[2]}m${str}\x1b[0m`
 }
 
-export const color = (colorName: keyof typeof CONSOLE_COLOR_CODES) => (str: string) =>
-	`${CONSOLE_COLOR_CODES[colorName]}${str}${CONSOLE_COLOR_CODES.reset}`
+/**
+ * Wraps a string in an ANSI color code.
+ * @param colorName The name of the color to wrap the string in.
+ * @returns A function that takes arguments (like `console.log`) and returns the wrapped string.
+ */
+export const color_wrap = (colorName: AnsiKeyword) => {
+	if (isSafari() || isFirefox()) return (...args: any[]) => args.join('')
 
-export const r = color('red')
-export const g = color('green')
-export const y = color('yellow')
-export const b = color('blue')
-export const m = color('magenta')
-export const c = color('cyan')
-export const gr = color('gray')
-export const dim = color('dim')
+	return (...args: any[]) =>
+		`${CONSOLE_COLOR_CODES[colorName]}${args.join('')}${CONSOLE_COLOR_CODES.reset}`
+}
+
+/** Wraps args in ansi red. */
+export const r = color_wrap('red')
+/** Wraps args in ansi green. */
+export const g = color_wrap('green')
+/** Wraps args in ansi yellow. */
+export const y = color_wrap('yellow')
+/** Wraps args in ansi blue. */
+export const b = color_wrap('blue')
+/** Wraps args in ansi magenta. */
+export const m = color_wrap('magenta')
+/** Wraps args in ansi cyan. */
+export const c = color_wrap('cyan')
+/** Wraps args in ansi gray. */
+export const gr = color_wrap('gray')
+/** Wraps args in ansi dim. */
+export const d = color_wrap('dim')
+/** Wraps args in ansi orange. */
 export const o = hex('#ff7f50')

@@ -1,37 +1,29 @@
 import type { Action } from 'svelte/action'
 
-export interface ClickOutsideEventDetail {
-	target: HTMLElement
-}
-
-/**
- * Calls `outclick` when a parent element is clicked.
- */
-export type ClickOutsideEvent = CustomEvent<ClickOutsideEventDetail>
-
-export interface ClickOutsideOptions {
-	/**
-	 * Array of classnames.  If the click target element has one of these classes, it will not be considered an outclick.
-	 */
-	whitelist?: string[]
-}
-
-// Attributes applied to the element that does use:clickOutside
-export interface ClickOutsideAttr {
-	onOutClick?: (event: ClickOutsideEvent) => void
-}
-
 /**
  * Calls a function when the user clicks outside the element.
  * @example
  * ```svelte
- * <div on:outclick={someFunction} use:clickOutside={{ whitelist: ['.burger'] }}>
+ * <div onOutClick={someFunction} use:clickOutside={{ whitelist: ['.burger'] }}>
  * ```
  */
-export const clickOutside: Action<Element, ClickOutsideOptions | undefined, ClickOutsideAttr> = (
-	node,
-	options?: ClickOutsideOptions,
-) => {
+export const clickOutside: Action<
+	Element,
+	| {
+			/**
+			 * Array of classnames.  If the click target element has one of these classes, it will not fire the `onOutClick` event.
+			 */
+			whitelist?: string[]
+	  }
+	| undefined,
+	{
+		onOutClick?: (
+			event: CustomEvent<{
+				target: HTMLElement
+			}>,
+		) => void
+	}
+> = (node, options) => {
 	const handleClick = (event: MouseEvent) => {
 		let disable = false
 
@@ -43,7 +35,7 @@ export const clickOutside: Action<Element, ClickOutsideOptions | undefined, Clic
 
 		if (!disable && node && !node.contains(event.target as Node) && !event.defaultPrevented) {
 			node.dispatchEvent(
-				new CustomEvent<ClickOutsideEventDetail>('outclick', {
+				new CustomEvent('outclick', {
 					detail: {
 						target: event.target as HTMLElement,
 					},

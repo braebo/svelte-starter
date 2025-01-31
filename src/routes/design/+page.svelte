@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Page from '$lib/components/Page.svelte'
-	// import { router } from '$lib/routes.svelte'
+	import { router } from '$lib/router'
 </script>
 
 <Page title="Design">
@@ -14,10 +14,10 @@
 	<div class="br-lg"></div>
 
 	<section>
-		<a href="/ui/elements"><h3>Elements</h3></a>
+		<a href={router.link('/design/elements')}><h3>Elements</h3></a>
 		<p>Stock HTML elements with a minimal CSS reset and a subtle style.</p>
 
-		<a href="/ui/inputs"><h3>Inputs</h3></a>
+		<a href={router.link('/design/inputs')}><h3>Inputs</h3></a>
 		<p>Styled inputs with a minimal CSS reset.</p>
 	</section>
 

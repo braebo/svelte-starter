@@ -2,6 +2,11 @@ export type Route = {
 	path: string
 	title: string
 	children?: Route[]
+	/**
+	 * Whether the route is only reachable during development.
+	 * @default false
+	 */
+	dev?: boolean
 }
 
 export type ExtractPaths<T extends Route[]> = T extends readonly (infer R)[]

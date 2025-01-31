@@ -35,7 +35,13 @@ class Themer {
 
 	#preference = $state<'light' | 'dark' | 'system'>('system')
 
-	mode = $derived.by(() => this.#resolveMode())
+	get mode() {
+		return this.#preference === 'system'
+			? this.#prefersLight?.matches
+				? 'light'
+				: 'dark'
+			: this.#preference
+	}
 
 	colors = $derived.by(() =>
 		Object.fromEntries(
@@ -129,7 +135,6 @@ class Themer {
 
 		let str = ':root {\n'
 		for (const [k, v] of Object.entries(this.activeTheme.colors)) {
-			// str += `\t${k}: ${this.resolveLightDark(v)};\n`
 			str += `\t${k}: ${v};\n`
 		}
 		str += '}'
@@ -149,6 +154,8 @@ class Themer {
 				this.#logger?.info(gr('saved mode to cookie'))
 			}
 		}
+
+		this.#logger?.info(gr('applied theme new theme:'), this.mode)
 
 		this.#logger?.groupEnd()
 	}
@@ -191,16 +198,15 @@ class Themer {
 		return fallback
 	}
 
-	#resolveMode(preference = this.#preference): 'light' | 'dark' {
-		return preference === 'system'
-			? this.#prefersLight?.matches
-				? 'light'
-				: 'dark'
-			: preference
-	}
-
 	#onSystemChange = (_: MediaQueryListEvent) => {
+		let current = this.mode
 		this.preference = 'system'
+		this.#logger?.info(gr('system change'), {
+			from: current,
+			to: this.mode,
+			prefersLight: this.#prefersLight?.matches,
+			prefersLight2: globalThis.window.matchMedia('(prefers-color-scheme: light)').matches,
+		})
 	}
 
 	#onStorageChange = (e: StorageEvent) => {

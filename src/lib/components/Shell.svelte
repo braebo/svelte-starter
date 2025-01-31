@@ -39,17 +39,17 @@ The main shell of the application. It provides a slot for the top navigation, th
 	<ModalOverlay />
 {/if}
 
-<main id="main">
+<!-- <main id="main"> -->
 	{@render children?.()}
-</main>
+<!-- </main> -->
 
 <style>
-	main {
+	/* main {
 		position: relative;
 
 		height: 100%;
 		max-width: 100%;
 
 		padding: 0;
-	}
+	} */
 </style>

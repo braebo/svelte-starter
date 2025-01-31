@@ -35,7 +35,6 @@
 <style lang="scss">
 	.page {
 		position: relative;
-		z-index: -1;
 
 		display: flex;
 		flex-direction: column;
@@ -45,17 +44,26 @@
 		max-width: 100%;
 	}
 
+	.page-content {
+		width: 100%;
+		max-width: min(var(--page-width), calc(100vw - var(--padding-inset)));
+		margin: 0 auto;
+	}
+
 	.page-title {
 		view-transition-name: page-title;
 
-		// width: fit-content;
-		// width: 50%;
 		height: fit-content;
+		margin-left: -2rem;
 
 		clip-path: inset(0 0 0 0);
 		filter: blur(0);
+	}
 
-		z-index: -1;
+	@media screen and (max-width: 831px) {
+		.page-title {
+			margin-left: -1rem;
+		}
 	}
 
 	::view-transition-new(page-title) {
@@ -68,18 +76,10 @@
 	@keyframes in {
 		from {
 			clip-path: inset(100% 0 0 0);
-			// filter: blur(5px);
-			// transform: translateX(-2rem) scale(1);
-			// opacity: 0;
-			// scale: 1;
-			transform: translateY(-100%);
+			transform: translateY(-50%);
 		}
 		to {
 			clip-path: inset(0 0 0 0);
-			// filter: blur(0);
-			// transform: translateX(0) scale(1);
-			// opacity: 1;
-			// scale: 1;
 			transform: translateY(0);
 		}
 	}
@@ -87,31 +87,11 @@
 	@keyframes out {
 		from {
 			clip-path: inset(0 0 0 0);
-			// filter: blur(0);
-			// transform: translateX(0) scale(1);
-			// opacity: 1;
-			// scale: 1;
-			// transform: translateY(0);
+			transform: translateY(0);
 		}
 		to {
 			clip-path: inset(100% 0 0 0);
-			// filter: blur(5px);
-			// transform: translateX(2rem) scale(1);
-			// opacity: 0;
-			// scale: 1;
-			// transform: translateY(-200%);
+			transform: translateY(10%);
 		}
-	}
-
-	@media screen and (max-width: 831px) {
-		.page-title {
-			margin-left: -1rem;
-		}
-	}
-
-	.page-content {
-		width: 100%;
-		max-width: min(var(--page-width), calc(100vw - var(--padding-inset)));
-		margin: 0 auto;
 	}
 </style>

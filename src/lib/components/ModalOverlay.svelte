@@ -24,7 +24,7 @@
 		opacity: 0.7;
 		background: var(--bg-a);
 
-		pointer-events: auto;
+		/* pointer-events: auto; */
 		z-index: 99;
 	}
 </style>

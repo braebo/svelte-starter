@@ -1,54 +1,32 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte'
 
+	import { hover } from '$lib/actions/hover'
+
 	let {
 		children,
 		dropdown,
-		force_open = $bindable(false),
-		align = 'left',
+		force_open = false,
+		onHover = () => {},
 	}: {
 		children: Snippet
 		dropdown: Snippet
 		force_open?: boolean
-		align?: 'left' | 'right'
+		onHover?: (hovering: boolean) => void
 	} = $props()
-
-	let hovering = $state(force_open)
-
-	let open = $derived(hovering || force_open)
-
-	function smooth_hover(node: HTMLElement) {
-		function smoothOver(_e: Event) {
-			clearTimeout(outTimer)
-			hovering = true
-		}
-
-		let outTimer: ReturnType<typeof setTimeout>
-		function smoothOut(_e: Event, delay = 500) {
-			clearTimeout(outTimer)
-			outTimer = setTimeout(() => {
-				hovering = false
-			}, delay)
-		}
-
-		node.addEventListener('pointerleave', smoothOut, true)
-		node.addEventListener('pointerenter', smoothOver, true)
-
-		return {
-			destroy() {
-				hovering = false
-				clearTimeout(outTimer)
-				node.removeEventListener('pointerleave', smoothOut, true)
-				node.removeEventListener('pointerenter', smoothOver, true)
-			},
-		}
-	}
 </script>
 
-<div class="dropdown" class:open use:smooth_hover>
+<div
+	class="dropdown"
+	class:open={force_open}
+	use:hover={{ delay: 500 }}
+	onhover={({ detail }) => {
+		onHover(detail.hovering)
+	}}
+>
 	{@render children()}
 
-	<nav class="dropdown-content" class:align-right={align === 'right'}>
+	<nav class="dropdown-content">
 		{@render dropdown()}
 	</nav>
 </div>
@@ -77,11 +55,6 @@
 		pointer-events: none;
 		isolation: isolate;
 		z-index: -1;
-
-		&.align-right {
-			left: auto;
-			right: -1rem;
-		}
 	}
 
 	.dropdown:hover,

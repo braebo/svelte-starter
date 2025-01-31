@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { routes } from '$lib/router'
 	import { fly } from 'svelte/transition'
+	import { routes } from '$lib/routes'
 	import { page } from '$app/state'
 </script>
 
 <nav>
 	<ul>
-		{#each Object.entries(routes) as [title, { path }], i}
+		{#each routes as { title, path }, i}
 			<li
 				class:active={page.url.pathname === path}
 				style:animation-delay={`${Object.keys(routes).length * 0.1 - (i % 2) * 0.1}s`}
@@ -26,7 +26,7 @@
 		display: flex;
 		justify-content: center;
 
-		pointer-events: none;
+		// pointer-events: none;
 	}
 
 	ul {

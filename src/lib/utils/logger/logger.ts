@@ -1,8 +1,8 @@
 import type { CSSColorName } from './css-colors.ts'
 
 import { CSS_COLORS, randomCSSColorName } from './css-colors'
+import { r, y, gr, d, hex } from './logger-colors.js'
 import { stringify } from '$lib/utils/stringify'
-import { r, y, gr, dim, hex } from './logger-colors.js'
 import { defer } from '$lib/utils/defer'
 import { tldr } from '$lib/utils/tldr'
 import { DEV } from 'esm-env'
@@ -108,7 +108,11 @@ export class Logger {
 
 		const color = this.options.fg?.toLowerCase() ?? randomCSSColorName()
 		this.options.fg = color
-		const fg = color.startsWith('#') ? color : color in CSS_COLORS ? CSS_COLORS[color as CSSColorName] : color
+		const fg = color.startsWith('#')
+			? color
+			: color in CSS_COLORS
+				? CSS_COLORS[color as CSSColorName]
+				: color
 		this.color = hex(fg)
 
 		this.#logger = Logger.createLogger(this.title, this.options)
@@ -184,7 +188,7 @@ export class Logger {
 		}
 
 		this.#group.messages = Array.from(buff).map(([item, count]) =>
-			count > 1 ? `${item}x${dim(`${count}`)}` : item,
+			count > 1 ? `${item}x${d(`${count}`)}` : item,
 		)
 	}
 
@@ -212,7 +216,7 @@ export class Logger {
 		return (
 			gr(str) +
 			gr('(') +
-			args.map((a) => gr(typeof a === 'object' ? stringify(a) : String(a))).join(', ') +
+			args.map(a => gr(typeof a === 'object' ? stringify(a) : String(a))).join(', ') +
 			gr(')')
 		)
 	}
@@ -229,7 +233,7 @@ export class Logger {
 			title =
 				title +
 				gr('(') +
-				args.map((a) => gr(typeof a === 'object' ? stringify(a) : String(a))).join(', ') +
+				args.map(a => gr(typeof a === 'object' ? stringify(a) : String(a))).join(', ') +
 				gr(')')
 		}
 		if (options?.fg ?? true) {
@@ -269,7 +273,9 @@ export class Logger {
 
 		options.deferred ??= true
 		const deferred =
-			options.deferred && !Logger._BYPASS_DEFER && /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
+			options.deferred &&
+			!Logger._BYPASS_DEFER &&
+			/^((?!chrome|android).)*safari/i.test(navigator.userAgent)
 
 		let messageConfigBase = '%c%s%c'
 
@@ -277,7 +283,10 @@ export class Logger {
 		const restParts = [] as string[]
 		if (rest.length) {
 			for (const part of rest) {
-				restParts.push(`color:#666;background:${bg};padding:0.1rem;filter:saturate(0.25);${css}`, ` ${part}`)
+				restParts.push(
+					`color:#666;background:${bg};padding:0.1rem;filter:saturate(0.25);${css}`,
+					` ${part}`,
+				)
 			}
 			const i = restParts.indexOf(restParts.at(-1) ?? '')
 			if (i >= 0) {
@@ -296,7 +305,7 @@ export class Logger {
 			: (...args: unknown[]) => {
 					let messageConfig = messageConfigBase
 
-					args.forEach((argument) => {
+					args.forEach(argument => {
 						const type = typeof argument
 						switch (type) {
 							case 'bigint':
@@ -322,7 +331,9 @@ export class Logger {
 						`${title}`,
 						...restParts,
 						`color:initial;background:${bg};padding:0.1rem;${css}`,
-						...args.map((a) => (import.meta?.env?.VITEST ? tldr(a, { maxDepth: 1, maxSiblings: 1 }) : a)),
+						...args.map(a =>
+							import.meta?.env?.VITEST ? tldr(a, { maxDepth: 1, maxSiblings: 1 }) : a,
+						),
 						`color:#666;background:${bg};padding:0.1rem;${css};font-size:0.66rem;`,
 					)
 				}
