@@ -11,6 +11,10 @@
 	let { data, children: layout_children } = $props()
 </script>
 
+<svelte:head>
+	<title>Svelte Starter · {data.title}</title>
+</svelte:head>
+
 <Shell>
 	{#snippet top_nav()}
 		<Nav home_title="home" title={data.title} links={data.routes} />

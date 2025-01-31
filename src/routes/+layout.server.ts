@@ -1,12 +1,11 @@
-import { routes } from '$lib/router'
+import { router } from '$lib/router/router.svelte.js'
+import { routes } from '$lib/routes'
 
 export const prerender = true
 
 export const load = async ({ url, locals }) => {
-	const title =
-		Object.entries(routes).find(
-			([_, link]) => link.path === url.pathname.split('/')[1]!,
-		)?.[0] ?? ''
+	const path = url.pathname
+	const title = path === '/' ? 'Home' : router.get(path).title
 
 	return {
 		title,
