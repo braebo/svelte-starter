@@ -1,5 +1,5 @@
+import { l, c, d, err, g, m, r, y } from '../src/lib/utils/logger/logger-colors'
 import { readFile, writeFile, readdir } from 'node:fs/promises'
-import { l, c, d, err, g, m, r, y } from './utils'
 import { join, relative } from 'node:path'
 
 const DRY = true
@@ -8,7 +8,7 @@ const START_DIR = process.argv[2] || '.'
 const EXCLUDE = ['node_modules', 'dist', 'build', '.git', '.svelte-kit', 'scripts']
 const REM_REGEX = /(\d*\.?\d+)rem\b/g
 
-const isExcluded = (path: string): boolean => EXCLUDE.some((excluded) => path.includes(excluded))
+const isExcluded = (path: string): boolean => EXCLUDE.some(excluded => path.includes(excluded))
 
 async function* findFiles(dir: string): AsyncGenerator<string> {
 	const entries = await readdir(dir, { withFileTypes: true })
