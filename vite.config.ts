@@ -8,9 +8,7 @@ const DEV = process.env.NODE_ENV === 'development'
 export default defineConfig({
 	plugins: [sveltekit(), DEV && Sonda({ server: true })],
 	build: { sourcemap: DEV },
-	server: {
-		allowedHosts: ['pubmed-successful-ross-among.trycloudflare.com'],
-	},
+	server: { allowedHosts: [] },
 	css: {
 		postcss: { plugins: [autoprefixer()] },
 	},

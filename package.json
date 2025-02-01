@@ -34,6 +34,7 @@
 		"@types/remark-abbr": "^1.4.4",
 		"@vitest/ui": "^3.0.4",
 		"autoprefixer": "^10.4.20",
+		"bun-types": "^1.2.1",
 		"cookie": "^1.0.2",
 		"eslint": "^9.19.0",
 		"eslint-config-prettier": "^10.0.1",

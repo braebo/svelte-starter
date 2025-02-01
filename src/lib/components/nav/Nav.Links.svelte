@@ -23,7 +23,7 @@
 </script>
 
 <div class="links">
-	{#each links as link, i}
+	{#each links as link}
 		{#if link.children?.[0].path}
 			<!-- prettier-ignore -->
 			<Dropdown
@@ -104,7 +104,6 @@
 			height: 0.2rem;
 			margin: 0 auto;
 
-			background: var(--bg-a);
 			border-top-left-radius: var(--radius-sm);
 			border-top-right-radius: var(--radius-sm);
 
@@ -185,12 +184,6 @@
 			background-color: color-mix(in srgb, var(--theme-a), var(--bg-c) 50%);
 		}
 
-		// --thin: 450;
-		// --bold: 700;
-		// .active {
-		// 	--weight: var(--bold);
-		// }
-
 		a {
 			box-sizing: content-box;
 
@@ -241,14 +234,12 @@
 				font-variation-settings: 'wght' 620;
 			}
 
-			&:hover,
-			&.active {
-				// TODO - this is kinda nice?
-				// background: color-mix(in srgb, var(--bg-b), var(--bg-c) 50%);
+			&:hover.secondary {
+				background: light-dark(var(--bg-b), var(--bg-c));
+			}
 
-				&.secondary {
-					background: var(--bg-b);
-				}
+			&.active.secondary {
+				box-shadow: inset 0 -1px 0 0 var(--theme-a);
 			}
 
 			&:not(.secondary) {
@@ -259,30 +250,12 @@
 			&.secondary {
 				font-size: var(--font-sm);
 
-				&.active {
-					box-shadow: inset 0 -1px var(--bg-c);
-				}
-
 				&:first-of-type {
 					border-bottom-left-radius: var(--radius-sm);
 				}
 				&:last-of-type {
 					border-bottom-right-radius: var(--radius-sm);
 				}
-
-				// &:first-of-type.active,
-				// &:first-of-type.sibling {
-				// 	border-left: 1px solid var(--bg-b);
-				// }
-
-				// &:last-of-type.active,
-				// &:last-of-type.sibling {
-				// 	border-right: 1px solid var(--bg-b);
-				// }
-
-				// &.sibling {
-				// 	border-bottom: 1px solid var(--bg-b);
-				// }
 			}
 		}
 	}

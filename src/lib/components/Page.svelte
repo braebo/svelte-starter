@@ -3,14 +3,16 @@
 
 	import { IN } from '$lib/utils/transitions'
 	import { fly } from 'svelte/transition'
+	import { router } from '$lib/router'
+	import { page } from '$app/state'
 
 	let {
-		title,
+		title = router.get(page.url.pathname).title,
 		before,
 		after,
 		children,
 	}: {
-		title?: string
+		title?: string | false
 		before?: Snippet
 		after?: Snippet
 		children?: Snippet

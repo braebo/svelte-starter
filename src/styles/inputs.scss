@@ -1,15 +1,20 @@
 input,
 select,
 textarea {
-	--outline: color-mix(in hsl, var(--bg-b), var(--bg-c));
-	--outline-hover: var(--bg-e);
-	--outline-focus: var(--fg-d);
+	--background: color-mix(in srgb, var(--bg-a), var(--bg-b) 42%);
+	--outline: color-mix(in hsl, var(--bg-b), var(--bg-c) 33%);
+	--outline-hover: var(--bg-c);
+	--outline-focus: var(--bg-e);
 
 	position: relative;
 	margin-top: var(--padding);
 	accent-color: var(--theme-a);
 	outline-color: var(--outline);
 	border: none;
+
+	&:not([type='range']) {
+		box-shadow: var(--shadow-sm);
+	}
 }
 
 input,
@@ -24,7 +29,7 @@ input::-webkit-slider-runnable-track {
 
 	font-size: var(--font-xs);
 
-	transition-duration: 0.15s;
+	transition-duration: 0.1s;
 	transition-property: border-color, outline-color, background-color, color;
 
 	&:hover {
@@ -51,7 +56,7 @@ textarea {
 	padding: 0.2rem 1rem;
 
 	color: var(--fg-a);
-	background-color: var(--bg-a);
+	background-color: var(--background);
 	border-radius: var(--radius);
 	outline-width: 1px;
 	outline-style: solid;

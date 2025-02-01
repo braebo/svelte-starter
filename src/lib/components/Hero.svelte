@@ -29,7 +29,7 @@
 
 <div class="br-lg"></div>
 
-<div class="container">
+<div class="hero">
 	{@render word('svelte')}
 
 	<div
@@ -61,7 +61,7 @@
 {/snippet}
 
 <style lang="scss">
-	.container {
+	.hero {
 		display: flex;
 		position: relative;
 		align-items: center;
