@@ -13,6 +13,6 @@ export default defineConfig({
 		postcss: { plugins: [autoprefixer()] },
 	},
 	test: {
-		include: ['src/**/*.{test,spec}.{js,ts}'],
+		include: ['src/**/*.{test,spec}.{js,ts}', 'scripts/**/*.{test,spec}.{js,ts}'],
 	},
 })
