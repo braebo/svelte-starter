@@ -1,7 +1,9 @@
 import type { Route, ExtractPaths, GetRouteByPath } from './router.types'
-import type { page as Page } from '$app/state'
+import { page, type page as Page } from '$app/state'
 
 import { routes, type Routes } from '../routes'
+import { l, r } from '@braebo/ansi'
+import { DEV } from 'esm-env'
 
 /**
  * @deprecated Use the {@link router} singleton.
@@ -77,6 +79,10 @@ export class Router<const T extends Route[] = Routes> {
 		return page.url.pathname.startsWith(parent) && page.url.pathname !== parent
 	}
 
+	get current(): Route {
+		return this.get(page.url.pathname) as Route
+	}
+
 	/**
 	 * Returns the {@link Route route} for a given path.
 	 *
@@ -87,11 +93,8 @@ export class Router<const T extends Route[] = Routes> {
 	 */
 	get<P extends ExtractPaths<typeof this.routes>>(
 		path: P | (string & {}),
-	): GetRouteByPath<typeof this.routes, P> {
-		const findRoute = (
-			routes: Route[],
-			targetPath: string,
-		): Array<Route>[number] | undefined => {
+	): GetRouteByPath<typeof this.routes, P> | null {
+		const findRoute = (routes: Route[], targetPath: string): Array<Route>[number] | undefined => {
 			const direct = routes.find(route => route.path === targetPath)
 			if (direct) return direct
 
@@ -104,24 +107,25 @@ export class Router<const T extends Route[] = Routes> {
 		}
 
 		const found = findRoute(this.routes, path)
-		if (!found) throw new Error(`Route not found: ${path}`)
-		// @ts-expect-error
-		return found
+		if (DEV && !found) {
+			// console.error(`Route not found: ${path}`)
+			l(r(`Route not found:`), path)
+		}
+
+		return (found as GetRouteByPath<typeof this.routes, P>) ?? null
 	}
 
 	/**
 	 * A type-safe way to link to a route that just returns the given path.
 	 */
 	link<const P extends ExtractPaths<typeof this.routes>>(path: P): P {
-		return this.get(path).path
+		return this.get(path)?.path ?? path
 	}
 
 	/**
 	 * Helper for linking to source files on GitHub.
 	 */
-	gh<T extends string>(
-		path: T extends `/${string}` ? never : T,
-	): `${typeof this.repo_url}/tree/main/${T}` {
+	gh<T extends string>(path: T extends `/${string}` ? never : T): `${typeof this.repo_url}/tree/main/${T}` {
 		return `${this.repo_url}/tree/main/${path}`
 	}
 }

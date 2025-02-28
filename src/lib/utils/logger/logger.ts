@@ -2,7 +2,7 @@ import type { CSSColorName } from './css-colors.ts'
 
 import { CSS_COLORS, randomCSSColorName } from './css-colors'
 import { stringify } from '$lib/utils/stringify'
-import { r, y, gr, d } from './logettes'
+import { r, y, gr, d } from '@braebo/ansi'
 import { hex } from './logger-colors.js'
 import { defer } from '$lib/utils/defer'
 import { tldr } from '$lib/utils/tldr'
@@ -329,6 +329,6 @@ export class Logger {
 	}
 }
 
-export const logger = (title = 'LOG', options?: LoggerOptions) => {
+export const logger = (title = 'LOG', options?: Partial<LoggerOptions>) => {
 	return Logger.createLogger(title, options)
 }

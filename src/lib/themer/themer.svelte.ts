@@ -1,8 +1,8 @@
 import type { Theme } from './themer.types'
 
-import { gr } from '$lib/utils/logger/logettes'
 import { Logger } from '$lib/utils/logger/logger'
 import { vanilla } from './themes/themes'
+import { gr } from '@braebo/ansi'
 import { parse } from 'cookie'
 import { DEV } from 'esm-env'
 

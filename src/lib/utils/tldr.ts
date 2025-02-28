@@ -1,4 +1,4 @@
-import { b } from './logger/logettes'
+import { b } from '@braebo/ansi'
 
 /**
  * Options for {@link tldr}.
