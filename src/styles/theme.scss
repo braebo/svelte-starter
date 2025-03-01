@@ -29,10 +29,10 @@
 	--fg-e: light-dark(var(--dark-e), var(--light-e));
 }
 
-:root[data-mode='dark'] {
+:root.dark {
 	color-scheme: dark;
 }
-:root[data-mode='light'] {
+:root.light {
 	color-scheme: light;
 }
 
