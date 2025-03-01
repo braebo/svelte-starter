@@ -29,12 +29,7 @@
 
 <nav class:visible style:z-index={nav_state.open ? 80 : null} aria-label="Primary">
 	<a class="home-link" href="/" aria-label="Home">
-		<Logo
-			active={page.url.pathname === '/'}
-			--width="3rem"
-			--circle="transparent"
-			--delay="0s"
-		/>
+		<Logo active={page.url.pathname === '/'} --width="3rem" --circle="transparent" --delay="0s" />
 	</a>
 
 	<div class="desktop">
@@ -56,7 +51,7 @@
 		left: 0;
 		right: 0;
 
-		gap: clamp(0rem, 5rem, 1.75vw);
+		// gap: clamp(0rem, 5rem, 1.75vw);
 
 		width: var(--nav-width);
 		height: var(--nav-height);
@@ -129,6 +124,13 @@
 
 		nav:not(.visible):not(:focus-within) {
 			transform: translate(0, calc(var(--nav-height)));
+		}
+
+		.home-link {
+			// outline: 1px solid red;
+			margin: unset;
+			transform: translate(-1rem, -0.1rem);
+			width: 5rem;
 		}
 
 		.nav-spacer {

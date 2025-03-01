@@ -4,10 +4,9 @@
 	import { IN } from '$lib/utils/transitions'
 	import { fly } from 'svelte/transition'
 	import { router } from '$lib/router'
-	import { page } from '$app/state'
 
 	let {
-		title = router.get(page.url.pathname).title,
+		title = router.current.title,
 		before,
 		after,
 		children,
@@ -31,6 +30,7 @@
 			{@render children?.()}
 		</div>
 	</div>
+
 	{@render after?.()}
 </div>
 
@@ -64,7 +64,8 @@
 
 	@media screen and (max-width: 831px) {
 		.page-title {
-			margin-left: -1rem;
+			// margin-left: -1rem;
+			margin-left: 0rem;
 		}
 	}
 

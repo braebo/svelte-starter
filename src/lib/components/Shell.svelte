@@ -6,7 +6,6 @@ The main shell of the application. It provides a slot for the top navigation, th
 	import type { Snippet } from 'svelte'
 
 	import PreloadingIndicator from '$lib/components/nav/PreloadingIndicator.svelte'
-	import { nav_state } from '$lib/components/nav/nav_state.svelte'
 	import SkipLink from '$lib/components/nav/SkipLink.svelte'
 	import ModalOverlay from './ModalOverlay.svelte'
 	import { navigating } from '$app/state'
@@ -35,21 +34,8 @@ The main shell of the application. It provides a slot for the top navigation, th
 	{@render top_nav?.()}
 {/if}
 
-{#if nav_state.overlay}
-	<ModalOverlay />
-{/if}
+{@render children?.()}
 
-<!-- <main id="main"> -->
-	{@render children?.()}
-<!-- </main> -->
+<div class="br-xl" />
 
-<style>
-	/* main {
-		position: relative;
-
-		height: 100%;
-		max-width: 100%;
-
-		padding: 0;
-	} */
-</style>
+<ModalOverlay />

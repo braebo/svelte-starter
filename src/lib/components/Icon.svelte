@@ -7,13 +7,15 @@ use an svg icon that was provided through `Icons.svelte` from
 	let {
 		name,
 		size = 20,
+		stroke_width = 1.5,
 	}: {
 		name: string
 		size?: string | number
+		stroke_width?: string | number
 	} = $props()
 </script>
 
-<svg width={size} height={size}>
+<svg width={size} height={size} stroke-width={stroke_width} style:--stroke-width={stroke_width}>
 	<use xlink:href="#{name}" />
 </svg>
 
@@ -27,9 +29,9 @@ use an svg icon that was provided through `Icons.svelte` from
 
 		fill: none;
 		stroke: currentColor;
-		stroke-width: 2;
 		stroke-linecap: round;
 		stroke-linejoin: round;
+		stroke-width: var(--stroke-width);
 
 		-webkit-transform-origin: center center;
 		transform-origin: center center;

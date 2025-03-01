@@ -3,15 +3,14 @@ Top navigation bar for the application. It provides a slot for the left side, th
 -->
 
 <script lang="ts">
-	import type { Route } from '$lib/router'
+	import { router, type Route } from '$lib/router'
 
 	import ThemeSwitch from '$lib/components/ThemeSwitch.svelte'
-	import FontToggle from '$lib/components/FontToggle.svelte'
 	import Icon from '$lib/components/Icon.svelte'
 	import { nav_state } from './nav_state.svelte'
 	import MobileMenu from './MobileMenu.svelte'
+	import { tick, untrack } from 'svelte'
 	import { page } from '$app/state'
-	import { tick } from 'svelte'
 
 	let {
 		links,
@@ -30,6 +29,12 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			document.documentElement.style.overflow = 'hidden'
 			document.documentElement.style.scrollbarGutter = 'stable'
 			document.body.style.overflow = 'hidden'
+			const route = router.get('/' + page.url.pathname.split('/')[1])
+			if (route) current = route
+			untrack(() => {
+				console.log({ links: $state.snapshot(links) })
+				console.log({ current: $state.snapshot(current) })
+			})
 		} else {
 			// Enable root to scroll
 			document.documentElement.style.overflow = ''
@@ -40,7 +45,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 </script>
 
 <svelte:window
-	onkeydown={(e) => {
+	onkeydown={e => {
 		if (nav_state.open && e.key === 'Escape') {
 			nav_state.open = false
 			// We only manage focus when Esc is hit otherwise, the navigation will reset focus.
@@ -56,8 +61,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 {/if}
 
 <div class="mobile mobile-menu">
-	<FontToggle />
-
 	<ThemeSwitch />
 
 	<button
@@ -71,7 +74,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 			if (nav_state.open) {
 				const segment = page.url.pathname.split('/')[1]
-				current = links.find((link) => link.title === segment)
+				current = links.find(link => link.title === segment)
 			}
 		}}
 	>
@@ -107,7 +110,8 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		display: flex;
 		align-items: center;
 		color: inherit;
-		margin-left: 0.4em;
+		margin-left: 0.4rem;
+		font-size: 1.5rem;
 	}
 
 	@media (min-width: 832px) {

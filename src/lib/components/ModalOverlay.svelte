@@ -1,15 +1,18 @@
 <script lang="ts">
+	import { nav_state } from './nav/nav_state.svelte'
+	import { onNavigate } from '$app/navigation'
 	import { fade } from 'svelte/transition'
 
-	let { onclose }: { onclose?: () => void } = $props()
+	function close() {
+		nav_state.open = false
+	}
+
+	onNavigate(close)
 </script>
 
-<div
-	transition:fade={{ duration: 100 }}
-	class="modal-overlay"
-	aria-hidden="true"
-	onclick={onclose}
-></div>
+{#if nav_state.open}
+	<div transition:fade={{ duration: 100 }} class="modal-overlay" aria-hidden="true" onclick={close}></div>
+{/if}
 
 <style>
 	.modal-overlay {
@@ -24,7 +27,7 @@
 		opacity: 0.7;
 		background: var(--bg-a);
 
-		/* pointer-events: auto; */
-		z-index: 99;
+		z-index: 50;
+		contain: layout paint;
 	}
 </style>

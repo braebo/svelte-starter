@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Route } from '$lib/router'
-	import { page } from '$app/stores'
+
+	import { page } from '$app/state'
 	import { onMount } from 'svelte'
 
 	let { title, contents = [] }: { title: string; contents: Route['children'] } = $props()
@@ -31,13 +32,23 @@
 </script>
 
 <nav bind:this={nav}>
-	{#each contents as child}
-		<section>
-			<h2>{title} • {child.title}</h2>
+	<h3>{title}</h3>
+	<br />
+	<br />
 
-			{#if child.children?.length !== 0}
+	<ul>
+		{#each contents as child}
+			{#if !child.children?.length}
 				<ul>
-					{#each child.children ?? [] as { path, title }}
+					<li>
+						<a href={child.path} aria-current={child.path === page.url.pathname ? 'page' : undefined}>
+							{child.title}
+						</a>
+					</li>
+				</ul>
+			{:else}
+				<ul>
+					{#each child.children ?? [] as { title }}
 						<li>
 							{#if title}
 								<h3>
@@ -48,12 +59,7 @@
 							<ul>
 								{#each child.children ?? [] as { path, title }}
 									<li>
-										<a
-											href={path}
-											aria-current={path === $page.url.pathname
-												? 'page'
-												: undefined}
-										>
+										<a href={path} aria-current={path === page.url.pathname ? 'page' : undefined}>
 											{title}
 										</a>
 									</li>
@@ -63,50 +69,34 @@
 					{/each}
 				</ul>
 			{/if}
-		</section>
-	{/each}
+		{/each}
+	</ul>
 </nav>
 
 <style>
-	nav {
-		padding: 0 0 3rem 0;
-		font-family: var(--font-family-ui);
-		overflow-y: auto;
-		height: 100%;
-	}
-
-	section {
-		padding: 1rem var(--padding-inset);
-
-		& > ul {
-			margin-bottom: 0 0 2rem 0;
-		}
-
-		ul {
-			list-style-type: none;
-			margin: 0;
-			margin-bottom: 2.5rem;
-		}
-
-		li {
-			display: block;
-		}
-	}
-
-	h2,
 	h3 {
-		display: block;
-		padding-bottom: 0.8rem;
-		font: var(--font-ui-md);
-		text-transform: uppercase;
-	}
-
-	h2 {
 		position: sticky;
 		top: 0;
-		z-index: 1;
-		padding: 1rem 0;
 		background-color: var(--bg-b);
+		background-color: var(--bg-b);
+	}
+
+	nav {
+		top: 0;
+		margin-bottom: auto;
+		overflow-y: auto;
+		height: max-content;
+	}
+
+	ul {
+		display: flex;
+		flex-direction: column;
+		list-style-type: none;
+		margin: 0;
+	}
+
+	li {
+		display: block;
 	}
 
 	a {
@@ -114,7 +104,7 @@
 		align-items: center;
 
 		&[aria-current='page'] {
-			color: var(--fg-accent) !important;
+			color: var(--theme-a) !important;
 		}
 	}
 </style>

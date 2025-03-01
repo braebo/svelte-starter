@@ -24,7 +24,7 @@
 
 <div class="links">
 	{#each links as link}
-		{#if link.children?.[0].path}
+		{#if link.children?.[0]?.path}
 			<!-- prettier-ignore -->
 			<Dropdown
 				onHover={e => setActiveHoverId(e, link.path)}
@@ -71,7 +71,7 @@
 		{link.title}
 	</a>
 
-	{#if className === 'primary'}
+	{#if className === 'primary' && link.children?.length}
 		<div class="lip" class:active class:parent class:sibling></div>
 	{/if}
 {/snippet}
@@ -132,11 +132,7 @@
 
 				&::before {
 					opacity: 1;
-					background-image: radial-gradient(
-						circle at 50% 250%,
-						transparent 60%,
-						var(--bg2) 100%
-					);
+					background-image: radial-gradient(circle at 50% 250%, transparent 60%, var(--bg2) 100%);
 				}
 			}
 
@@ -152,11 +148,7 @@
 				margin: 0 auto;
 
 				opacity: 0.5;
-				background-image: radial-gradient(
-					circle at 50% 150%,
-					transparent 0%,
-					var(--bg-a) 100%
-				);
+				background-image: radial-gradient(circle at 50% 150%, transparent 0%, var(--bg-a) 100%);
 				border-top-left-radius: var(--radius-sm);
 				border-top-right-radius: var(--radius-sm);
 
@@ -203,7 +195,8 @@
 
 			font-family: var(--font-a);
 			font-variation-settings: 'wght' 450;
-			font-size: var(--font);
+			// font-size: var(--font);
+			font-size: 1.6rem;
 			white-space: nowrap;
 			line-height: 1.5;
 			letter-spacing: 0.05rem;
