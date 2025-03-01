@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { browser } from '$app/environment'
 	import Logo from './header/Logo.svelte'
-	import { spring } from 'svelte/motion'
+	import { Spring } from 'svelte/motion'
 
 	let y = $state(100)
 
-	const logo_y = spring(100, { stiffness: 0.015, damping: 0.075 })
+	const logo_y = new Spring(100, { stiffness: 0.015, damping: 0.075 })
 
 	function transition(node: HTMLElement, { i }: { i: number }) {
 		node.animate(
@@ -34,8 +34,7 @@
 
 	<div
 		class="logo-wrapper"
-		style:transform="translateY({$logo_y.toFixed(2)}%) rotate3d(0, 1, 0, {(90 * $logo_y) /
-			100}deg)"
+		style:transform="translateY({logo_y.current.toFixed(2)}%) rotate3d(0, 1, 0, {(90 * logo_y.current) / 100}deg)"
 	>
 		<div class="logo">
 			<Logo active={false} --width="4rem" />
@@ -49,6 +48,7 @@
 	<div class="word">
 		{#each letters as letter, i}
 			{@const pct = (100 / letters.length) * i}
+
 			<span
 				class="letter"
 				use:transition={{ i: start + i }}
@@ -104,6 +104,12 @@
 		to {
 			opacity: 1;
 			transform: rotate3d(0, 1, 0, 0deg);
+		}
+	}
+
+	@media (max-width: 831px) {
+		.br-lg {
+			height: 20vh;
 		}
 	}
 </style>
