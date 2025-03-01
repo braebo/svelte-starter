@@ -56,11 +56,9 @@ export const ANSI_COLOR_CODES = {
 type AnsiKeyword = keyof typeof ANSI_COLOR_CODES
 
 // Simple hex to RGB conversion
-const hexToRgb = (hex: string): [number, number, number] | null => {
+function hexToRgb(hex: string): [number, number, number] | null {
 	const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
-	return result
-		? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)]
-		: null
+	return result ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)] : null
 }
 
 // Function to create hex color
@@ -84,45 +82,16 @@ export const hex =
 export const color = (colorName: AnsiKeyword) => {
 	if (isSafari() || isFirefox()) return (...args: any[]) => args.join('')
 
-	return (...args: any[]) =>
-		`${ANSI_COLOR_CODES[colorName]}${args.join('')}${ANSI_COLOR_CODES.reset}`
+	// Use selective resets based on the type of style
+	const resetCode = colorName.startsWith('bg')
+		? '\x1b[49m' // Reset background.
+		: colorName === 'bold' || colorName === 'dim'
+			? '\x1b[22m' // Reset weight / intensity.
+			: colorName === 'italic'
+				? '\x1b[23m' // Reset italic.
+				: colorName === 'underline'
+					? '\x1b[24m' // Reset underline.
+					: '\x1b[39m' // Reset foreground color.
+
+	return (...args: any[]) => `${ANSI_COLOR_CODES[colorName]}${args.join('')}${resetCode}`
 }
-
-// TODO: move these to loggettes.ts
-
-/** console.log */
-export const l = (...args: any[]) => console.log(d('︙'), ...args)
-/** console.error */
-export const err = (...args: any[]) => console.error(r('︙ ERROR:'), ...args)
-/** Logs a new line. */
-export const n = (/** The number of new lines to log. */ count = 1) =>
-	console.log('\n'.repeat(count))
-
-/** Wraps args in ansi red. */
-export const r = color('red')
-/** Wraps args in ansi green. */
-export const g = color('green')
-/** Wraps args in ansi yellow. */
-export const y = color('yellow')
-/** Wraps args in ansi blue. */
-export const b = color('blue')
-/** Wraps args in ansi magenta. */
-export const m = color('magenta')
-/** Wraps args in ansi cyan. */
-export const c = color('cyan')
-/** Wraps args in ansi gray. */
-export const gr = color('gray')
-/** Wraps args in ansi dim. */
-export const d = color('dim')
-/** Wraps args in ansi orange. */
-export const o = hex('#ff7f50')
-/** Wraps args in ansi bold. */
-export const bd = color('bold')
-/** Wraps args in ansi italic. */
-export const em = color('italic')
-/** Wraps args in ansi underline. */
-export const ul = color('underline')
-/** Wraps args in ansi inverse. */
-export const iv = color('inverse')
-/** Wraps args in ansi strikethrough. */
-export const s = color('strikethrough')

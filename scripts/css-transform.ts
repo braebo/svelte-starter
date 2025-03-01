@@ -1,4 +1,4 @@
-import { l, c, d, err, g, m, r, y } from '../src/lib/utils/logger/logger-colors'
+import { l, c, d, err, g, m, r, y } from '../src/lib/utils/logger/logettes'
 import { readFile, writeFile, readdir } from 'node:fs/promises'
 import { join, relative } from 'node:path'
 

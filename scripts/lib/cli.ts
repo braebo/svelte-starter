@@ -1,4 +1,5 @@
-import { l, d, em, bd, r, c, m, o, hex } from '../../src/lib/utils/logger/logger-colors'
+import { l, d, em, bd, r, c, m, err } from '../../src/lib/utils/logger/logettes'
+import { hex } from '../../src/lib/utils/logger/logger-colors'
 import { parseArgs, type ParseArgsConfig } from 'util'
 
 export interface PositionalArg {
@@ -9,11 +10,25 @@ export interface PositionalArg {
 }
 
 export interface ArgDef<T extends string | boolean | number = string | boolean | number> {
-	type: T extends boolean ? 'boolean' : T extends number ? 'number' : 'string'
-	default?: T
-	short?: string
+	default: T
 	description: string
+	/**
+	 * Short form of the flag.
+	 * @example
+	 * args: {
+	 *   foo: {
+	 *     default: 'bar',
+	 *     short: '-f'
+	 *   }
+	 * }
+	 */
+	short?: string
 	required?: boolean
+	/**
+	 * Optional override for the arg parser.  By default, this is inferred from the value of
+	 * {@link default}.
+	 */
+	type?: T extends boolean ? 'boolean' : T extends number ? 'number' : 'string'
 }
 
 export type Args = Record<string, ArgDef<any>>
@@ -74,7 +89,6 @@ type InferArgs<T extends Args> = {
 }
 
 export class Cli<T extends Args> {
-	config: CliConfig<T>
 	values = {} as InferArgs<T> & { help?: boolean }
 	positionals = [] as string[]
 	args = [] as string[]
@@ -111,17 +125,16 @@ export class Cli<T extends Args> {
 	 */
 	#col2: number
 
-	constructor(config: CliConfig<T>) {
-		this.config = {
-			...config,
-			args: {
-				...config.args,
-				help: {
-					type: 'boolean',
-					// short: 'h',
-					description: 'Help screen',
-				},
-			},
+	constructor(public config: CliConfig<T>) {
+		// @ts-expect-error
+		this.config.args.help ??= {
+			type: 'boolean',
+			description: 'Help screen',
+		}
+
+		// Avoid adding `-h` to the help flag if it's already taken.
+		if (Object.values(config.args).some(a => a.short === 'h')) {
+			this.config.args.help.short = 'h'
 		}
 
 		if (config.autorun) {
@@ -151,17 +164,46 @@ export class Cli<T extends Args> {
 				return
 			}
 
+			// this.#intro()
+			this.#log_args()
+
 			callback?.(this.values, this.positionals)
-		} catch (error) {
-			if (error.code === 'ERR_PARSE_ARGS_UNKNOWN_OPTION') {
+		} catch (e) {
+			console.log('asdf')
+			if (e.code === 'ERR_PARSE_ARGS_UNKNOWN_OPTION') {
 				const optionRegex = /'(-{1,2}[a-zA-Z][a-zA-Z0-9-]*)'/
-				const option = error.message.match(optionRegex)?.[1]
+				const option = e.message.match(optionRegex)?.[1]
 
 				this.error(`${d('Unknown option:')} ${option}`)
+				this.#log_options()
 
 				return
 			}
-			throw error
+
+			if (e.code === 'ERR_INVALID_ARG_VALUE') {
+				this.error(`${d('Invalid value:')} ${e.message}`)
+				this.#log_options()
+				return
+			}
+
+			if (e.code === 'ERR_PARSE_ARGS_INVALID_OPTION_VALUE') {
+				e.code = 'Invalid option value'
+
+				if (e.message.match('Did you forget to specify the option argument for')) {
+					e.message = e.message.replace(
+						/Option '--([^']+)' argument is ambiguous\./,
+						"Option '--$1' argument is ambiguous.\nIf '--$1' is a boolean, set `type: \"boolean\"` or `default: true|false`.",
+					)
+				}
+
+				err(e.message)
+			}
+
+			if (e.code) this.error(e.code)
+			this.#log_options()
+			this.#log_outro()
+
+			throw e
 		}
 	}
 
@@ -172,12 +214,27 @@ export class Cli<T extends Args> {
 	#parseArgs() {
 		// Hide numbers from parseArgs or it'll blow up.
 		const options: ParseArgsConfig['options'] = Object.entries(this.config.args).reduce((acc, [key, def]) => {
+			let short = def.short ?? key[0]
+			if (short.startsWith('-')) {
+				short = short.slice(1)
+			}
+
+			let type = (def.type as string | undefined) ?? typeof def.default
+			if (['number', 'undefined'].includes(type)) {
+				type = 'string'
+			}
+
+			let defaultValue = def.default
+			if (typeof defaultValue === 'number') {
+				defaultValue = defaultValue.toString()
+			}
+
 			return {
 				...acc,
 				[key]: {
-					type: def.type === 'number' ? 'string' : def.type,
-					default: typeof def.default === 'number' ? def.default.toString() : def.default,
-					...(def.short && { short: def.short }),
+					type,
+					...(short && { short }),
+					...(defaultValue && { default: defaultValue }),
 				},
 			}
 		}, {})
@@ -225,7 +282,8 @@ export class Cli<T extends Args> {
 				// Skip the error if no args are provided.
 				if (!this.args.length) continue
 
-				this.error(`Missing argument: ${this.#c('--' + key)}`, false)
+				this.error(`Missing argument: ${this.#c('--' + key)}`)
+				this.#log_options()
 
 				l(d('Required:'))
 				for (const required of this.#options_strings_required) {
@@ -261,29 +319,24 @@ export class Cli<T extends Args> {
 
 		if (!missing.length) return true
 
-		missing.forEach(m => this.error(`Missing argument: ${this.#c(`${m}`)}`, false))
+		missing.forEach(m => this.error(`Missing argument: ${this.#c(`${m}`)}`))
 
-		this.#printUsage()
-		this.#printPositionals()
-		this.#printOptions()
+		this.#log_usage()
+		this.#log_positionals()
+		this.#log_options()
 
 		return false
 	}
 
 	help() {
 		this.#debug('help()')
-		this.#intro()
-		this.#printUsage()
-		this.#printPositionals()
-		this.#printOptions()
-		this.#printExamples()
+		this.#log_intro()
+		this.#log_usage()
+		this.#log_positionals()
+		this.#log_options()
+		this.#log_examples()
 
-		// console.log(d('⌞'))
-		// console.log(d('⟔'))
-		// console.log(d('⠼'))
-		// console.log(d('⎼'))
-		// console.log(d('⌜'))
-		console.log(d('↵'))
+		this.#log_outro()
 	}
 
 	/**
@@ -291,35 +344,43 @@ export class Cli<T extends Args> {
 	 * @param message - The error message to print.
 	 * @param printOptions - Whether to print the options.
 	 */
-	error(message: string, printOptions = true) {
+	error(message: string) {
 		l()
 		l(r(bd('ERROR')))
 		l(`  ${message}`)
-		// l()
-		if (printOptions) {
-			this.#printOptions()
+		// if (printOptions) {
+		// 	this.#log_options()
+		// }
+	}
+
+	#log_banner() {
+		if (this.config.banner) {
+			l()
+			this.config.banner.split('\n').forEach(line => l(this.#c(bd(line))))
 		}
 	}
 
-	#intro() {
+	#log_description() {
+		if (this.config.description) {
+			l()
+			l(em(d(` ${this.config.description}`)))
+		}
+	}
+
+	#log_intro() {
 		this.#debug('intro()')
 
 		console.log(d('↴'))
 
-		if (this.config.banner) {
-			l()
-			this.config.banner.split('\n').forEach(line => l(this.#c(bd(line))))
-			l()
-			if (this.config.description) {
-				l(em(d(` ${this.config.description}`)))
-			}
-		}
-		// 	l(bd(this.config.name))
-		// 	l()
-		// }
+		this.#log_banner()
+		this.#log_description()
 	}
 
-	#printUsage() {
+	#log_outro() {
+		console.log(d('↵'))
+	}
+
+	#log_usage() {
 		this.#debug('printUsage()')
 		l()
 		l()
@@ -334,52 +395,40 @@ export class Cli<T extends Args> {
 
 		if (Object.keys(this.config.args).length) {
 			str += d(this.#c(` [options]`))
-			// str += ' ' + d(this.#c('[')) + this.#c('options') + d(this.#c(']'))
 		}
 
 		l(str)
 	}
 
-	#printPositionals() {
+	#log_positionals() {
 		this.#debug('printPositionals()')
 		if (!this.#positionals) return
 
-		// l()
-		// l(this.#positionals_header)
 		l()
 		for (const str of Object.values(this.#positionals)) {
-			// l(d(em('  required:')) + str)
 			l(str)
 		}
-
-		// if (this.#positionals_example) {
-		// 	l()
-		// 	l(this.#positionals_example)
-		// }
 	}
 
 	/**
 	 * Prints the options
 	 */
-	#printOptions() {
+	#log_options() {
 		this.#debug('printOptional()')
 		const opts = this.#options
 
 		l()
 		l()
 		l(bd('Options'))
-		// l()
 
-		// l()
 		l(this.#options_header)
 		l()
 		for (const str of Object.values(opts)) {
 			l(str)
 		}
-		// l()
 	}
 
-	#printExamples() {
+	#log_examples() {
 		if (this.config.examples?.length) {
 			l()
 			l()
@@ -445,6 +494,23 @@ export class Cli<T extends Args> {
 		}
 	}
 
+	#log_args() {
+		this.#debug('log_args()')
+		this.#log_banner()
+		l()
+		// l()
+		// l(bd('Args'))
+		// l()
+		// for (const [k, v] of Object.entries(this.args)) {
+		// 	l(k, v)
+		// }
+		const longestFlag = Math.max(...Object.keys(this.config.args).map(key => key.length))
+		const padding = ' '.repeat(longestFlag - 2)
+		for (const [k, v] of Object.entries(this.values)) {
+			l(this.#c(d(`--${k}`)), padding, v)
+		}
+	}
+
 	#options_header = ''
 	#options_strings_required = [] as string[]
 	#options_strings = {} as Record<keyof T, string>
@@ -473,9 +539,6 @@ export class Cli<T extends Args> {
 			let str = '  ' + this.#c(flag)
 			str += ' '.repeat(this.#col1 - flag.length)
 			str += d(this.#c(short)) + '  '
-			// let str = '  ' + this.#c(d(short)) + '  '
-			// str += this.#c(flag)
-			// str += ' '.repeat(this.#col1 - flag.length)
 			str += def.description
 			str += ' '.repeat(this.#col2 - def.description.length + 'description'.length - 2)
 			str += d(def.default?.toString() ?? '')
@@ -490,7 +553,6 @@ export class Cli<T extends Args> {
 	}
 
 	#positionals_strings = {} as Record<string, string>
-	// #positionals_example = ''
 	get #positionals() {
 		if (!Object.keys(this.#positionals_strings).length) this.#generatePositionals()
 		return this.#positionals_strings
@@ -505,24 +567,14 @@ export class Cli<T extends Args> {
 		const longestName = Math.max(...(this.config.positionals ?? []).map(p => p.name.length))
 		const longestDescription = Math.max(...(this.config.positionals ?? []).map(p => p.description.length))
 
-		// let example = ''
-
 		for (const pos of this.config.positionals ?? []) {
 			let str = '  '
 			str += em(pos.name)
 			str += ' '.repeat(longestName - pos.name.length + gap)
 			str += d(pos.description)
 			str += ' '.repeat(longestDescription - pos.description.length + gap)
-			// if (pos.example) {
-			// 	// str += d(em(pos.example))
-			// 	example += ' ' + pos.example
-			// }
 			this.#positionals_strings[pos.name] = str
 		}
-
-		// if (example) {
-		// 	this.#positionals_example = d(em('  e.g.  ')) + this.config.usage + example
-		// }
 	}
 }
 

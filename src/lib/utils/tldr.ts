@@ -1,3 +1,5 @@
+import { b } from './logger/logettes'
+
 /**
  * Options for {@link tldr}.
  */
@@ -109,8 +111,7 @@ export function tldr<T>(
 				if (Array.isArray(obj)) {
 					// if (depthReached) return `[..${o.length} ${o.length === 1 ? 'item' : 'items'}]`
 					if (depthReached) return `[ ..${obj.length} ]`
-					if (obj.length <= maxSiblings || depth === 0)
-						return obj.map(s => parse(s, depth + 1))
+					if (obj.length <= maxSiblings || depth === 0) return obj.map(s => parse(s, depth + 1))
 
 					return [
 						...obj.slice(0, maxSiblings).map(s => parse(s, depth)),
@@ -125,16 +126,14 @@ export function tldr<T>(
 				}
 
 				if (keyCount <= maxSiblings || (preserveRootSiblings && depth === 0)) {
-					return Object.fromEntries(
-						Object.entries(obj).map(([k, v]) => [k, parse(v, depth + 1)]),
-					)
+					return Object.fromEntries(Object.entries(obj).map(([k, v]) => [k, parse(v, depth + 1)]))
 				}
 
 				return Object.fromEntries(
 					Object.entries(obj)
 						.slice(0, maxSiblings)
 						.concat([['..', `${keyCount - maxSiblings} more`]])
-						.map(([k, v]) => [k, parse(v, depth + 1)]),
+						.map(([k, v]) => [k, b(parse(v, depth + 1))]),
 				)
 			}
 		}

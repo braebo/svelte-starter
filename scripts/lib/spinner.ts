@@ -1,4 +1,4 @@
-import { d, o, err } from '../../src/lib/utils/logger/logger-colors'
+import { d, o, err } from '../../src/lib/utils/logger/logettes'
 import { stdout } from 'node:process'
 
 export class Spinner {

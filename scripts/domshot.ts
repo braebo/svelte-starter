@@ -1,6 +1,6 @@
 /// <reference types="bun-types" />
 
-import { l, g, d, err } from '../src/lib/utils/logger/logger-colors'
+import { l, g, d, err } from '../src/lib/utils/logger/logettes'
 import { chromium, type Browser } from '@playwright/test'
 import { Spinner } from './lib/spinner'
 import { Cli } from './lib/cli'
@@ -20,10 +20,9 @@ const cli = new Cli({
 	positionals: [],
 	args: {
 		query: {
-			short: '-q',
-			description: "Target node's CSS query selector",
-			default: '.domshot',
-			required: true,
+			short: 'q',
+			default: '.example',
+			description: 'Query selector',
 		},
 		url: {
 			type: 'string',
@@ -61,13 +60,19 @@ const cli = new Cli({
 			short: 'v',
 			description: 'Viewport size',
 		},
+		animations: {
+			short: 'a',
+			default: 'allow' as 'allow' | 'disabled',
+			description: 'Allow or disable animations',
+		},
 	},
 })
 
 try {
-	cli.run(async (values, positionals) => {
-		const [selector] = positionals
-		await takeScreenshot({ ...values, node: selector })
+	cli.run(async (values, _positionals) => {
+		// const [selector] = _positionals
+		// await takeScreenshot({ ...values, query: selector })
+		await takeScreenshot(values)
 	})
 } catch (e) {
 	err(e)
@@ -102,7 +107,7 @@ async function takeScreenshot(values: typeof cli.values) {
 			document.body.style.backgroundColor = 'transparent'
 		})
 
-		const element = page.locator(values.node).first()
+		const element = page.locator(values.query).first()
 
 		// Apply scaling via CSS transform if scale is not 1
 		if (scaleValue !== 1) {

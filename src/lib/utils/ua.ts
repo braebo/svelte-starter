@@ -14,9 +14,7 @@ export function getBrowser(request?: Request): 'chrome' | 'firefox' | 'safari' |
  */
 export function getUserAgent(request?: Request) {
 	if (typeof globalThis.navigator === 'undefined' && !request) {
-		console.error(
-			'Error getting user-agent: Request object is required on the server, but was not provided.',
-		)
+		console.error('Error getting user-agent: Request object is required on the server, but was not provided.')
 	}
 
 	return request?.headers.get('user-agent') || globalThis.navigator?.userAgent
@@ -56,9 +54,7 @@ export function isMac(request?: Request) {
  * `true` if the current browser is running on MacOS.
  */
 export function isApple(request?: Request) {
-	return (
-		isMac(request) || isIOS(request) || isIPad(request) || isIPadOS(request) || isIPad(request)
-	)
+	return isMac(request) || isIOS(request) || isIPad(request) || isIPadOS(request) || isIPad(request)
 }
 
 /**

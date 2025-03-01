@@ -1,0 +1,23 @@
+{
+	"name": "ansi",
+	"version": "0.0.1",
+	"description": "ANSI code utilites for node.js and chrome",
+	"main": "index.ts",
+	"scripts": {
+		"build": "bun build src/index.ts --compile --minify --outfile ./dist/ansi-mini.js"
+	},
+	"devDependencies": {
+		"typescript": "^5.4.5"
+	},
+	"type": "module",
+	"types": "./dist/ansi-mini.d.ts",
+	"files": [
+		"dist"
+	],
+	"exports": {
+		".": {
+			"default": "./dist/ansi-mini.js",
+			"types": "./dist/ansi-mini.d.ts"
+		}
+	}
+}

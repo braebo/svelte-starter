@@ -1,6 +1,6 @@
 import type { Theme } from './themer.types'
 
-import { gr } from '$lib/utils/logger/logger-colors'
+import { gr } from '$lib/utils/logger/logettes'
 import { Logger } from '$lib/utils/logger/logger'
 import { vanilla } from './themes/themes'
 import { parse } from 'cookie'
