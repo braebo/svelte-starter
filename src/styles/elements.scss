@@ -38,7 +38,7 @@ a {
 	}
 }
 
-a:not(nav a) {
+a.external {
 	position: relative;
 	// padding-right: 2rem;
 

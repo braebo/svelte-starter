@@ -1,3 +1,8 @@
+:root {
+	--quint-out: cubic-bezier(0.23, 1, 0.32, 1);
+	--out: cubic-bezier(0.19, 1, 0.78, 1);
+}
+
 @keyframes fade-in {
 	from {
 		opacity: 0;
