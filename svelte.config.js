@@ -19,7 +19,7 @@ const config = {
 	extensions: ['.svelte', ...mdsvexConfig.extensions],
 	preprocess: [
 		processCodeblockSync({
-			include: (filename) => filename.startsWith(preprocessorRoot),
+			include: filename => filename.startsWith(preprocessorRoot),
 			logger: createShikiLogger(formatFilename),
 			opts,
 		}),
@@ -37,7 +37,7 @@ const config = {
 		if (svelte_ignores.includes(warning.code)) return
 		handler(warning)
 	},
-	warningFilter: (warning) => {
+	warningFilter: warning => {
 		return !svelte_ignores.includes(warning.code)
 	},
 }

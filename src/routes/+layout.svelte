@@ -17,12 +17,14 @@
 
 <Shell>
 	{#snippet top_nav()}
-		<Nav home_title="home" title={data.title} links={data.routes} />
+		<Nav title={data.title} links={data.routes} />
 		<div class="br-lg" />
 	{/snippet}
 
 	{#snippet children()}
-		{@render layout_children()}
+		<main id="main">
+			{@render layout_children()}
+		</main>
 	{/snippet}
 </Shell>
 

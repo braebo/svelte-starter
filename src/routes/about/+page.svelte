@@ -6,5 +6,5 @@
 <br-md />
 
 <center in:fly|global={{ ...IN, y: 5 }} out:fade={OUT}>
-	<a href="https://github.com/braebo/svelte-starter">about</a>
+	<a class="external" href="https://github.com/braebo/svelte-starter">about</a>
 </center>

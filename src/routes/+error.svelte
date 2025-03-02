@@ -1,25 +1,30 @@
 <script lang="ts">
 	import { dev } from '$app/environment'
-	import { page } from '$app/stores'
+	import { page } from '$app/state'
 
-	if (dev) console.log($page.error)
+	if (dev) console.log(page.error)
 </script>
 
-<h1>{$page.status}</h1>
+<h1>{page.status}</h1>
 
-{#if dev}
-	<div class="error">
-		<pre class="message">{$page.error?.message}</pre>
-		
-		{#if $page.error && 'stack' in $page.error}
-			<pre class="stack">{$page.error.stack}</pre>
-		{/if}
-	</div>
-{/if}
+<section>
+	{#if page.error?.message}
+		<pre class="message">{page.error.message}</pre>
+	{/if}
+
+	{#if dev && page.error && 'stack' in page.error}
+		<pre class="stack">{page.error.stack}</pre>
+	{/if}
+
+	<div class="br-md"></div>
+	<!-- <button onclick={() => window.history.back()}>Go back</button> -->
+	<a href="/" class="btn">Go home</a>
+</section>
 
 <style lang="scss">
 	h1 {
-		margin: 15vh auto 0;
+		margin: 15vh auto 0 auto;
+		width: max-content;
 
 		color: var(--warn);
 
@@ -27,53 +32,10 @@
 		font-weight: 100;
 	}
 
-	.error {
+	section {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-
-		margin-top: 10vh;
-		text-align: center;
-
-		pre {
-			max-width: 90vw;
-
-			text-align: left;
-			line-height: 1.5rem;
-		}
-
-		.message {
-			width: max-content;
-			height: max-content;
-			margin: 1rem auto;
-			padding: 1rem;
-
-			color: var(--fg-d);
-			background: transparent;
-			border: 1px solid var(--bg-d);
-			border-radius: var(--radius-lg);
-		}
-
-		.stack {
-			color: color-mix(in lch, var(--fg-d-rgb), transparent 50%);
-			max-height: 40vh;
-			overflow-y: auto;
-		}
-
-		::-webkit-scrollbar {
-			background-color: var(--bg-a);
-			width: 10px;
-			height: 10px;
-		}
-		::-webkit-scrollbar-thumb {
-			background-color: color-mix(in lch, var(--bg-d-rgb), transparent 50%);
-			border-radius: 5px;
-		}
-		::-webkit-scrollbar-track {
-			background-color: color-mix(in lch, var(--bg-d-rgb), transparent 10%);
-		}
-		::-webkit-scrollbar-corner {
-			background-color: color-mix(in lch, var(--bg-d-rgb), transparent 10%);
-		}
+		gap: 2rem;
 	}
 </style>
