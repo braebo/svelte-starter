@@ -1,4 +1,6 @@
-import { error, type Handle } from '@sveltejs/kit'
+import type { Handle, HandleServerError } from '@sveltejs/kit'
+
+import { redirect } from '@sveltejs/kit'
 import { router } from '$lib/router'
 
 import { parse } from 'cookie'
@@ -8,14 +10,9 @@ export const handle: Handle = ({ event, resolve }) => {
 	const cookies = parse(event.request.headers?.get('cookie') || '')
 	event.locals.theme = <'dark' | 'light' | 'system'>cookies.theme || 'dark'
 
-	try {
-		const route = router.get(event.url.pathname)
-		if (route && (route as any)?.dev && !DEV) {
-			error(404, 'Not found')
-		}
-	} catch (e) {
-		console.error(e)
-		error(404, 'Not found')
+	const route = router.get(event.url.pathname)
+	if (!DEV && (route as any)?.dev) {
+		redirect(308, '/404')
 	}
 
 	let page = ''
@@ -26,4 +23,12 @@ export const handle: Handle = ({ event, resolve }) => {
 				return page.replace('__THEME__', event.locals.theme).replace('__COLOR_SCHEME__', event.locals.theme)
 		},
 	})
+}
+
+export const handleError: HandleServerError = ({ error, event }) => {
+	console.error(error)
+
+	if (error && typeof error === 'object' && 'status' in error && error.status === 404) {
+		if (event.url.pathname !== '/404') redirect(308, '/404')
+	}
 }
