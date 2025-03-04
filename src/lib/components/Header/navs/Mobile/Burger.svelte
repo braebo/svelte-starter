@@ -1,38 +1,30 @@
 <script lang="ts">
-	import { browser } from '$app/environment'
 	import { device } from '$lib/utils/device.svelte'
+	import { browser } from '$app/environment'
 	import { fly } from 'svelte/transition'
 
-	let { showMenu = $bindable(false) }: { showMenu: boolean } = $props()
+	let {
+		showMenu = $bindable(false),
+	}: {
+		showMenu: boolean
+	} = $props()
 
 	let scrolled = $derived(device.scrollY > 100)
 	let intro = $state(true)
 
-	const handleClick = () => {
-		intro = false
-		showMenu = !showMenu
-	}
+	$effect(() => {
+		if (intro) {
+			if (showMenu) {
+				intro = false
+			}
+		}
+	})
 </script>
 
-<div
-	class="burger"
-	role="button"
-	tabindex="0"
-	class:scrolled
-	class:showMenu
-	onkeypress={handleClick}
-	onpointerdown={handleClick}
-	out:fly|global={{ x: 75 }}
->
+<div class="burger" role="button" tabindex="0" class:scrolled class:showMenu out:fly|global={{ x: 75 }}>
 	{#if browser}
 		{#key showMenu}
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				viewBox="0 0 101 101"
-				overflow="visible"
-				height="100%"
-				width="100%"
-			>
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 101 101" overflow="visible" height="100%" width="100%">
 				<path
 					class="TopBun"
 					class:showMenu
@@ -70,34 +62,36 @@
 <style lang="scss">
 	svg {
 		--openDelay: 0s;
-		--openDur: 0.5s;
+		--openDur: 0.25s;
 
 		--closeDelay: 0.25s;
-		--closeDur: 0.5s;
+		--closeDur: 0.25s;
 
-		--pattyDur: 0.75s;
-		--bunDur: 0.5s;
+		--pattyDur: 0.5s;
+		--bunDur: 0.25s;
+
+		scale: 1.1;
 	}
 
 	.burger {
 		position: relative;
 		z-index: 30;
 
-		width: 50px;
-		height: 50px;
-		padding: 5px;
+		width: 25px;
+		height: 25px;
+		// padding: 5px;
 		margin: auto;
 
-		border-radius: 100%;
+		// border-radius: 100%;
 
-		background: var(--bg-a);
+		// background: var(--bg-a);
 
 		cursor: pointer;
-		transition: box-shadow 0.2s;
+		// transition: box-shadow 0.2s;
 
-		&.scrolled {
-			box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.25);
-		}
+		// &.scrolled {
+		// 	box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.25);
+		// }
 	}
 
 	.Patty {
@@ -125,34 +119,32 @@
 			opacity: 1;
 		}
 		100% {
-			stroke-dashoffset: -66.9;
-			stroke-dasharray: 259, 1000;
+			// stroke-dashoffset: -66.9;
+			// stroke-dasharray: 259, 1000;
+			stroke-dashoffset: -67;
+			stroke-dasharray: 0, 1000;
 
-			opacity: 0.25;
+			opacity: 0;
 		}
 	}
 
 	.TopBun {
 		transform-origin: 25% 40%;
-		animation: var(--openDur) cubic-bezier(0.5, 0, 1, 0.5) var(--openDelay) reverse forwards
-			openTop;
+		animation: openTop var(--openDur) cubic-bezier(0.5, 0, 1, 0.5) var(--openDelay) reverse forwards;
 		transform: rotate(45deg);
 	}
 	.BottomBun {
 		transform-origin: 30% 60%;
-		animation: var(--openDur) cubic-bezier(0.5, 0, 1, 0.5) var(--openDelay) reverse forwards
-			openBottom;
+		animation: openBottom var(--openDur) cubic-bezier(0.5, 0, 1, 0.5) var(--openDelay) reverse forwards;
 		transform: rotate(-45deg);
 	}
 
 	.TopBun.showMenu {
-		animation: var(--closeDur) cubic-bezier(0, 0.51, 0.37, 1.02) var(--closeDelay) forwards
-			openTop;
+		animation: openTop var(--closeDur) cubic-bezier(0, 0.51, 0.37, 1.02) var(--closeDelay) forwards;
 		transform: rotate(0deg);
 	}
 	.BottomBun.showMenu {
-		animation: var(--closeDur) cubic-bezier(0, 0.51, 0.37, 1.02) var(--closeDelay) forwards
-			openBottom;
+		animation: openBottom var(--closeDur) cubic-bezier(0, 0.51, 0.37, 1.02) var(--closeDelay) forwards;
 		transform: rotate(0deg);
 	}
 
@@ -176,7 +168,7 @@
 	.intro {
 		opacity: 0;
 
-		animation: cubic-bezier(0.785, 0.135, 0.15, 0.86) 1s forwards intro;
+		animation: intro 1s cubic-bezier(0.785, 0.135, 0.15, 0.86) forwards;
 	}
 
 	.TopBun.intro {
