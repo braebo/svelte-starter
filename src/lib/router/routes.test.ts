@@ -34,8 +34,8 @@ describe('router', () => {
 
 	test('router.get()', () => {
 		const route = router.get('/foo/bar')
-		expect(route.path).toBe('/foo/bar')
-		expect(route.title).toBe('Bar')
+		expect(route?.path).toBe('/foo/bar')
+		expect(route?.title).toBe('Bar')
 	})
 
 	test('router.isActive()', () => {
@@ -60,16 +60,16 @@ describe('router', () => {
 	})
 
 	test('router.children()', () => {
-		const children = router.get('/foo').children
+		const children = router.get('/foo')?.children
 		expect(children).toHaveLength(2)
-		expect(children[0].path).toBe('/foo/bar')
-		expect(children[1].path).toBe('/foo/baz')
+		expect(children?.[0].path).toBe('/foo/bar')
+		expect(children?.[1].path).toBe('/foo/baz')
 	})
 
 	test('router.get()', () => {
 		const homeRoute = router.get('/')
-		expect(homeRoute.path).toBe('/')
-		expect(homeRoute.title).toBe('Home')
+		expect(homeRoute?.path).toBe('/')
+		expect(homeRoute?.title).toBe('Home')
 	})
 
 	test('router.gh()', () => {
@@ -81,7 +81,7 @@ describe('router', () => {
 
 	test('router.get()', () => {
 		const inputsRoute = router.get('/foo/bar')
-		expect(inputsRoute.path).toBe('/foo/bar')
-		expect(inputsRoute.title).toBe('Bar')
+		expect(inputsRoute?.path).toBe('/foo/bar')
+		expect(inputsRoute?.title).toBe('Bar')
 	})
 })

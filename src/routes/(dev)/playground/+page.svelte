@@ -4,10 +4,12 @@
 </script>
 
 <Page title="Playground">
+	<div class="br-lg"></div>
+
 	<div class="playground">
 		{#each router.current.children ?? [] as child}
 			<div>
-				<h2>{child.path}</h2>
+				<a href={child.path}>{child.title}</a>
 			</div>
 		{/each}
 	</div>
@@ -20,5 +22,9 @@
 		justify-content: center;
 		align-items: center;
 		gap: 1rem;
+	}
+
+	a {
+		font-size: var(--font-lg);
 	}
 </style>

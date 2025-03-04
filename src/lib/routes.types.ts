@@ -10,24 +10,16 @@ export type RouteTree = Record<string, Route>
  */
 export type GetPaths<T extends RouteTree> = {
 	[K in keyof T]: T[K] extends { path: string }
-		? T[K]['path']
-		| (T[K] extends { children: infer C }
-				? C extends RouteTree
-					? GetPaths<C>
-					: never
-				: never)
+		? T[K]['path'] | (T[K] extends { children: infer C } ? (C extends RouteTree ? GetPaths<C> : never) : never)
 		: never
 }[keyof T]
 
 /**
  * Gets a route by its path, including the key as the title.
  */
-export type GetRouteByPath<
-	T extends RouteTree,
-	P extends GetPaths<T>
-> = {
+export type GetRouteByPath<T extends RouteTree, P extends GetPaths<T>> = {
 	[K in keyof T]: T[K] extends { path: P }
-		? { path: T[K]['path'], title: K & string }
+		? { path: T[K]['path']; title: K & string }
 		: T[K] extends { children: infer C }
 			? C extends RouteTree
 				? GetRouteByPath<C, P>
