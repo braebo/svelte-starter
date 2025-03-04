@@ -6,10 +6,9 @@
 	import { expoOut, quintOut } from 'svelte/easing'
 	import { afterNavigate } from '$app/navigation'
 	import { trap } from '$lib/actions/trap'
+	import { Tween } from 'svelte/motion'
 	import { page } from '$app/state'
 	import { tick } from 'svelte'
-	import { DEV } from 'esm-env'
-	import { Tween } from 'svelte/motion'
 
 	interface Props {
 		links: Route[]
@@ -18,8 +17,6 @@
 	}
 
 	let { links, current, onclose }: Props = $props()
-
-	let depth = $derived((current?.path.split('/')?.length || 0) - 2)
 
 	let show_context_menu = $state(!!current?.children)
 
@@ -53,8 +50,6 @@
 		}
 	}
 
-	let parent = $derived(router.getParent(current?.path))
-
 	let parts = $derived.by(() => {
 		const parts = current?.path.split('/').filter(Boolean)
 
@@ -71,15 +66,15 @@
 
 		return routes
 	})
-	// let parts_string = $derived(JSON.stringify($state.snapshot(parts.map(p => p.path)), null, 2))
 
-	let scroll_left = new Tween(0, { duration: 1000, easing: quintOut })
+	let scroll_left = new Tween(0, { duration: 500, easing: quintOut })
 	let viewport: HTMLElement | undefined = $state()
-	function scroll(node: HTMLElement, i: number) {
+	function scroll(_: HTMLElement, i: number) {
 		if (!viewport) return
 
 		if (parts.length > 1) {
 			const target = viewport.querySelector(`[data-index="${i}"]`) as HTMLElement
+			scroll_left.set(viewport.offsetLeft, { duration: 0 })
 			scroll_left.set(target.offsetLeft)
 		}
 	}
@@ -91,18 +86,11 @@
 	})
 </script>
 
-<!-- {#if DEV}
-	<span class="depth">{depth}</span>
-	<div>
-		{parent?.title}
-	</div>
-	<pre style="position:fixed;top:-90vh;left:1rem;z-index:999;isolation:isolate;font-size:1.5rem;">{JSON.stringify($state.snapshot(parts.map(p => p.path)), null, 2)}</pre>
-{/if} -->
-
 {#snippet link(link: Route, active: boolean)}
 	{@const parent = current?.path.startsWith(link.path)}
-	<li class:active class:parent>
-		<a href={link.path} class:active={link.path === page.url.pathname || parent}>
+	{@const noteworthy = active && (link.path === page.url.pathname || (parent && link.path !== '/'))}
+	<li class:active={noteworthy}>
+		<a href={link.path} class:active={noteworthy}>
 			{link.title}
 		</a>
 
@@ -113,6 +101,7 @@
 					event.preventDefault()
 
 					if (current?.path.includes(link.path)) {
+						scroll_left.set(viewport!.scrollLeft, { duration: 0 })
 						if (parts.length > 1) {
 							current = parts.at(-2)
 							scroll_left.set(0)
@@ -154,7 +143,9 @@
 
 <div class="menu" use:trap={{ reset_focus: false }}>
 	<div class="mobile-main-menu" transition:popup={{ duration: 200, easing: quintOut }}>
-		<div class="menu-background" class:ready style:height="{menu_height}px"></div>
+		<div class="menu-background" class:ready style:height="{menu_height}px">
+			<div class="shadow"></div>
+		</div>
 		<div
 			class="clip"
 			style:--height-difference="{menu_height - universal_menu_inner_height}px"
@@ -200,11 +191,6 @@
 				class:offset={show_context_menu && current?.children?.length}
 				bind:clientHeight={menu_height}
 				bind:this={viewport}
-				onscroll={e => {
-					if (parts.length > 1) return
-					e.preventDefault()
-					e.currentTarget.scrollTo({ left: 0, behavior: 'smooth' })
-				}}
 			>
 				<div class="universal" bind:this={universal_menu}>
 					<div class="contents" bind:clientHeight={universal_menu_inner_height} class:current={true}>
@@ -228,26 +214,24 @@
 				</div>
 
 				{#each parts as part, i (part.path)}
-					{#if part}
-						<div
-							data-index={i}
-							data-path={part.path}
-							use:scroll={i}
-							class="context"
-							style="left: {50 + 100 * i}%;"
-							inert={!show_context_menu}
-							style:height="{universal_menu_inner_height}px"
-						>
-							<ul class="children">
-								{#each part.children ?? [] as child}
-									{@render link(
-										child,
-										current?.path.includes(child.path) || part.path.includes(child.path),
-									)}
-								{/each}
-							</ul>
-						</div>
-					{/if}
+					<div
+						data-index={i}
+						data-path={part.path}
+						use:scroll={i}
+						class="context"
+						style="left: {50 + 100 * i}%;"
+						inert={!show_context_menu}
+						style:height="{universal_menu_inner_height}px"
+					>
+						<ul class="children">
+							{#each part.children ?? [] as child}
+								{@render link(
+									child,
+									current?.path.includes(child.path) || part.path.includes(child.path),
+								)}
+							{/each}
+						</ul>
+					</div>
 				{/each}
 
 				{#if parts.length === 1}
@@ -280,18 +264,15 @@
 	// }
 
 	.menu {
-		// display: block;
 		position: fixed;
 		left: 0px;
 		bottom: var(--bottom, var(--nav-height));
 
 		width: 100%;
-		// height: 70vh;
 
 		border-radius: 1rem 1rem 0 0;
-		// background: var(--background, var(--bg-b));
 
-		filter: var(--shadow);
+		// filter: var(--shadow);
 		transform: translate3d(0, 0, 0);
 
 		overflow-y: hidden;
@@ -309,11 +290,13 @@
 		height: 99.5%;
 
 		border-radius: 1rem 1rem 0 0;
-		background: var(--background, var(--bg-b));
-		will-change: height;
+		background: var(--bg-b);
+		// background: color-mix(in oklab, var(--bg-b), var(--bg-c) 50%);
 
 		transition: 0.3s var(--quint-out);
 		transition-property: none;
+
+		will-change: height;
 
 		&.ready {
 			transition-property: height;
@@ -322,6 +305,22 @@
 		:root.dark & {
 			border-top: solid 1px var(--bg-c);
 		}
+	}
+
+	.shadow {
+		position: absolute;
+		left: 0;
+		bottom: 0;
+
+		width: 100%;
+		height: 1rem;
+
+		// background: red;
+		background-image: linear-gradient(
+			to bottom,
+			rgba(0, 0, 0, 0),
+			rgba(0, 0, 0, calc(var(--shadow-lightness) * 0.15))
+		);
 	}
 
 	.mobile-main-menu {
@@ -343,34 +342,21 @@
 
 	.viewport {
 		position: relative;
+		display: flex;
 		bottom: -1px;
 
-		// display: grid;
-		// grid-template-columns: 50% 50%;
-		// grid-auto-rows: 100%;
-		// grid-auto-columns: 50%;
-		// grid-auto-flow: column;
-		display: flex;
-
 		width: 200%;
-		// max-width: 200%;
 		height: 100%;
 
 		transition: 0.3s cubic-bezier(0.23, 1, 0.32, 1);
 
-		// DELETEME
 		overflow-x: scroll;
 		scroll-snap-type: x mandatory;
+		pointer-events: none;
 
 		&.offset {
 			width: 100%;
 		}
-
-		// & > * {
-		// 	overflow-y: auto;
-		// 	transition: inherit;
-		// 	transition-property: transform, opacity;
-		// }
 	}
 
 	.pad {
@@ -390,8 +376,12 @@
 		}
 
 		button {
-			background: color-mix(in oklab, var(--bg-b), var(--bg-c) 66%);
 			transform: scaleX(0.8) scaleY(0.6) translate(0.3rem, 0);
+
+			background: var(--bg-c);
+			:root.light & {
+				background: color-mix(in oklab, var(--bg-b), var(--bg-c) 66%);
+			}
 			&:hover {
 				background: color-mix(in oklab, var(--bg-b), var(--bg-c) 90%);
 			}
@@ -405,7 +395,10 @@
 		}
 
 		.icon svg {
-			color: color-mix(in oklab, var(--bg-c), var(--bg-d) 66%);
+			color: color-mix(in oklab, var(--bg-c), var(--theme-a) 66%);
+			// :root.dark & {
+			// 	color: color-mix(in oklab, var(--bg-e), var(--fg-e) 66%);
+			// }
 			transform: scale(1, 1.2) translate(0.4rem, 0.2rem);
 		}
 		.icon {
@@ -442,6 +435,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		background: color-mix(in oklab, var(--bg-a), var(--bg-b) 25%);
 		gap: 1.5rem;
 	}
 
@@ -451,7 +445,8 @@
 		color: inherit;
 		box-shadow: none;
 		border-radius: var(--radius);
-		outline: 1px solid var(--bg-c) !important;
+		outline: 1px solid color-mix(in oklab, var(--bg-b), var(--bg-d) 20%) !important;
+		background: color-mix(in oklab, var(--bg-a), var(--bg-b) 50%);
 
 		font: var(--font-ui-md);
 	}
@@ -463,7 +458,13 @@
 	li.active:has(button) a {
 		max-width: calc(100% - 2rem);
 		margin-right: 2rem;
-		background: color-mix(in oklab, var(--bg-b), var(--bg-c) 50%);
+		// background: color-mix(in oklab, var(--bg-b), var(--bg-c) 75%);
+		background: var(--bg-c);
+
+		// :root.light & {
+		// 	background: color-mix(in oklab, var(--bg-b), var(--bg-c) 50%);
+		// 	background: color-mix(in oklab, var(--bg-b), var(--bg-c) 75%);
+		// }
 	}
 
 	li:has(button):not(.active) a {
@@ -473,24 +474,29 @@
 
 	li a.active,
 	li.active a:active {
-		color: var(--theme-a);
+		// outline-color: color-mix(in oklab, var(--bg-c), var(--theme-a) 50%);
+		// outline-width: 1px;
+		// outline-style: solid;
 		background: color-mix(in oklab, var(--bg-b), var(--bg-c) 50%);
 	}
-
+	
 	:root.light {
 		li a.active,
 		li.active a:active {
+			color: var(--bg-a);
 			background: color-mix(in oklab, var(--bg-d), var(--fg-d) 50%);
+		}
+		li.active button {
+			background: color-mix(in oklab, var(--bg-d), var(--fg-d) 25%);
 		}
 	}
 
-	.universal,
+	.universal {
+		min-width: 50%;
+	}
+
 	.contents,
 	.context {
-		// position: absolute;
-		// bottom: 0;
-
-		// width: 50%;
 		min-width: 50%;
 		height: fit-content;
 		max-height: 70vh;
@@ -515,9 +521,7 @@
 	.context {
 		right: 0;
 
-		// padding-bottom: 2rem;
-
-		background-color: var(--bg-b);
+		// background-color: var(--bg-b);
 		border-radius: 1rem 1rem 0 0;
 	}
 
@@ -551,9 +555,10 @@
 		border: none;
 	}
 
-	.parent {
-		a {
-			color: red;
+	.viewport {
+		&::-webkit-scrollbar {
+			height: 0;
+			display: none;
 		}
 	}
 </style>

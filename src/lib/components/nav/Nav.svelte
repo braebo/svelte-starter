@@ -42,7 +42,7 @@
 
 <style lang="scss">
 	nav {
-		contain: layout size style;
+		// contain: layout size style;
 		view-transition-name: nav;
 
 		position: fixed;
@@ -59,6 +59,10 @@
 		padding: 0 clamp(1.5rem, 2.5rem, 1.75vw);
 
 		background-color: var(--bg-b);
+		// box-shadow: 0px -4px 10px 10px rgba(0, 0, 0, 1) !important;
+		// outline: 1px solid red !important;
+		// outlinse-offset: -1px;
+		// overflow: visible;
 
 		user-select: none;
 		// isolation: isolate;

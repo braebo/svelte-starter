@@ -29,12 +29,23 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			document.documentElement.style.overflow = 'hidden'
 			document.documentElement.style.scrollbarGutter = 'stable'
 			document.body.style.overflow = 'hidden'
-			const route = router.get('/' + page.url.pathname.split('/')[1])
-			if (route) current = route
+			// const route = router.get('/' + page.url.pathname.split('/')[1])
+			// if (route) current = route
+			// current = router.current
 			// untrack(() => {
 			// 	console.log({ links: $state.snapshot(links) })
 			// 	console.log({ current: $state.snapshot(current) })
 			// })
+
+			// const r1 = page.url.pathname.split('/').slice(0, -1).join('/')
+			// console.log('r1', r1)
+			// const r2 = router.get(r1)
+			// console.log('r2', r2)
+			if (page.url.pathname.split('/').length > 1) {
+				const route = router.getParent(router.current?.path ?? '/')
+				console.log('route', route)
+				if (route) current = route
+			}
 		} else {
 			// Enable root to scroll
 			document.documentElement.style.overflow = ''
@@ -95,12 +106,15 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		flex: 1;
 		justify-content: end;
 		align-items: center;
-
 		gap: calc(var(--padding) * 2);
+		
+		z-index: 100;
 	}
 
 	button.menu-toggle {
 		padding: calc(var(--padding) / 2);
+		overflow: hidden;
+		background: var(--bg-a);
 	}
 
 	.current-section {

@@ -79,19 +79,9 @@
 
 		width: 25px;
 		height: 25px;
-		// padding: 5px;
 		margin: auto;
 
-		// border-radius: 100%;
-
-		// background: var(--bg-a);
-
 		cursor: pointer;
-		// transition: box-shadow 0.2s;
-
-		// &.scrolled {
-		// 	box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.25);
-		// }
 	}
 
 	.Patty {
