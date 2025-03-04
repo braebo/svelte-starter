@@ -9,6 +9,7 @@
 	import { page } from '$app/state'
 	import { tick } from 'svelte'
 	import { DEV } from 'esm-env'
+	import { Tween } from 'svelte/motion'
 
 	interface Props {
 		links: Route[]
@@ -53,22 +54,57 @@
 	}
 
 	let parent = $derived(router.getParent(current?.path))
+
+	let parts = $derived.by(() => {
+		const parts = current?.path.split('/').filter(Boolean)
+
+		let path = ''
+		let routes = [] as Route[]
+
+		for (const part of parts ?? []) {
+			path += '/' + part
+			const route = router.get(path)
+			if (route) {
+				routes.push(route)
+			}
+		}
+
+		return routes
+	})
+	// let parts_string = $derived(JSON.stringify($state.snapshot(parts.map(p => p.path)), null, 2))
+
+	let scroll_left = new Tween(0, { duration: 1000, easing: quintOut })
+	let viewport: HTMLElement | undefined = $state()
+	function scroll(node: HTMLElement, i: number) {
+		if (!viewport) return
+
+		if (parts.length > 1) {
+			const target = viewport.querySelector(`[data-index="${i}"]`) as HTMLElement
+			scroll_left.set(target.offsetLeft)
+		}
+	}
+
+	$effect(() => {
+		scroll_left.current
+		if (!viewport) return
+		viewport.scrollLeft = scroll_left.current
+	})
 </script>
 
-{#if DEV}
+<!-- {#if DEV}
 	<span class="depth">{depth}</span>
 	<div>
 		{parent?.title}
 	</div>
-{/if}
+	<pre style="position:fixed;top:-90vh;left:1rem;z-index:999;isolation:isolate;font-size:1.5rem;">{JSON.stringify($state.snapshot(parts.map(p => p.path)), null, 2)}</pre>
+{/if} -->
 
 {#snippet link(link: Route, active: boolean)}
 	{@const parent = current?.path.startsWith(link.path)}
 	<li class:active class:parent>
-		<a href={link.path} class:active={link.path === page.url.pathname} class:parent>
+		<a href={link.path} class:active={link.path === page.url.pathname || parent}>
 			{link.title}
 		</a>
-
 
 		{#if link.children?.length}
 			<button
@@ -77,8 +113,15 @@
 					event.preventDefault()
 
 					if (current?.path.includes(link.path)) {
-						current = undefined
-						show_context_menu = false
+						if (parts.length > 1) {
+							current = parts.at(-2)
+							scroll_left.set(0)
+						} else {
+							current = undefined
+							show_context_menu = false
+							scroll_left.set(0)
+						}
+
 						return
 					}
 
@@ -111,7 +154,7 @@
 
 <div class="menu" use:trap={{ reset_focus: false }}>
 	<div class="mobile-main-menu" transition:popup={{ duration: 200, easing: quintOut }}>
-		<div class="menu-background" class:ready style:height="{universal_menu_inner_height}px"></div>
+		<div class="menu-background" class:ready style:height="{menu_height}px"></div>
 		<div
 			class="clip"
 			style:--height-difference="{menu_height - universal_menu_inner_height}px"
@@ -156,6 +199,12 @@
 				class="viewport"
 				class:offset={show_context_menu && current?.children?.length}
 				bind:clientHeight={menu_height}
+				bind:this={viewport}
+				onscroll={e => {
+					if (parts.length > 1) return
+					e.preventDefault()
+					e.currentTarget.scrollTo({ left: 0, behavior: 'smooth' })
+				}}
 			>
 				<div class="universal" bind:this={universal_menu}>
 					<div class="contents" bind:clientHeight={universal_menu_inner_height} class:current={true}>
@@ -178,21 +227,31 @@
 					</div>
 				</div>
 
-				{#if current}
-					<div class="context" inert={!show_context_menu} style:height="{universal_menu_inner_height}px">
-						<ul class="children">
-							{#each current.children ?? [] as child}
-								{@render link(child, current.path.includes(child.path))}
-							{/each}
-						</ul>
-					</div>
-					<div class="context" inert={!show_context_menu} style:height="{universal_menu_inner_height}px">
-						<ul class="children">
-							{#each current.children ?? [] as child}
-								{@render link(child, current.path.includes(child.path))}
-							{/each}
-						</ul>
-					</div>
+				{#each parts as part, i (part.path)}
+					{#if part}
+						<div
+							data-index={i}
+							data-path={part.path}
+							use:scroll={i}
+							class="context"
+							style="left: {50 + 100 * i}%;"
+							inert={!show_context_menu}
+							style:height="{universal_menu_inner_height}px"
+						>
+							<ul class="children">
+								{#each part.children ?? [] as child}
+									{@render link(
+										child,
+										current?.path.includes(child.path) || part.path.includes(child.path),
+									)}
+								{/each}
+							</ul>
+						</div>
+					{/if}
+				{/each}
+
+				{#if parts.length === 1}
+					<div class="pad"></div>
 				{/if}
 			</div>
 		</div>
@@ -200,16 +259,37 @@
 </div>
 
 <style lang="scss">
+	// .menu {
+	// 	outline: 1px solid hsla(0, 100%, 50%, 25%);
+	// }
+	// .viewport {
+	// 	outline: 1px solid hsla(300, 47%, 75%, 25%);
+	// 	outline-offset: -1px;
+	// }
+	// .universal {
+	// 	outline: 1px solid hsla(240, 100%, 50%, 25%);
+	// 	outline-offset: -2px;
+	// }
+	// .contents {
+	// 	outline: 1px solid hsla(39, 100%, 50%, 25%);
+	// 	outline-offset: -3px;
+	// }
+	// .context {
+	// 	outline: 1px solid hsla(120, 100%, 25%, 25%);
+	// 	outline-offset: -4px;
+	// }
+
 	.menu {
-		display: block;
+		// display: block;
 		position: fixed;
 		left: 0px;
 		bottom: var(--bottom, var(--nav-height));
 
 		width: 100%;
-		height: 70vh;
+		// height: 70vh;
 
 		border-radius: 1rem 1rem 0 0;
+		// background: var(--background, var(--bg-b));
 
 		filter: var(--shadow);
 		transform: translate3d(0, 0, 0);
@@ -273,23 +353,28 @@
 		display: flex;
 
 		width: 200%;
-		max-width: 200%;
+		// max-width: 200%;
 		height: 100%;
 
 		transition: 0.3s cubic-bezier(0.23, 1, 0.32, 1);
 
 		// DELETEME
 		overflow-x: scroll;
+		scroll-snap-type: x mandatory;
 
 		&.offset {
 			width: 100%;
 		}
 
-		& > * {
-			overflow-y: auto;
-			transition: inherit;
-			transition-property: transform, opacity;
-		}
+		// & > * {
+		// 	overflow-y: auto;
+		// 	transition: inherit;
+		// 	transition-property: transform, opacity;
+		// }
+	}
+
+	.pad {
+		min-width: 50%;
 	}
 
 	li .icon :global(svg) {
@@ -399,14 +484,17 @@
 		}
 	}
 
-	.universal .contents,
+	.universal,
+	.contents,
 	.context {
-		position: absolute;
-		bottom: 0;
+		// position: absolute;
+		// bottom: 0;
 
-		width: 50%;
-		padding: 1rem;
+		// width: 50%;
+		min-width: 50%;
+		height: fit-content;
 		max-height: 70vh;
+		padding: 1rem;
 
 		overflow-y: scroll;
 	}
@@ -427,7 +515,7 @@
 	.context {
 		right: 0;
 
-		padding-bottom: 2rem;
+		// padding-bottom: 2rem;
 
 		background-color: var(--bg-b);
 		border-radius: 1rem 1rem 0 0;
