@@ -6,7 +6,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	import { router, type Route } from '$lib/router'
 
 	import ThemeSwitch from '$lib/components/ThemeSwitch.svelte'
-	import Icon from '$lib/components/Icon.svelte'
+	import Burger from '../header/navs/Mobile/Burger.svelte'
 	import { nav_state } from './nav_state.svelte'
 	import MobileMenu from './MobileMenu.svelte'
 	import { tick, untrack } from 'svelte'
@@ -31,10 +31,10 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			document.body.style.overflow = 'hidden'
 			const route = router.get('/' + page.url.pathname.split('/')[1])
 			if (route) current = route
-			untrack(() => {
-				console.log({ links: $state.snapshot(links) })
-				console.log({ current: $state.snapshot(current) })
-			})
+			// untrack(() => {
+			// 	console.log({ links: $state.snapshot(links) })
+			// 	console.log({ current: $state.snapshot(current) })
+			// })
 		} else {
 			// Enable root to scroll
 			document.documentElement.style.overflow = ''
@@ -78,7 +78,8 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			}
 		}}
 	>
-		<Icon name={nav_state.open ? 'close' : 'menu'} size={24} />
+		<!-- <Icon name={nav_state.open ? 'close' : 'menu'} size={24} /> -->
+		<Burger bind:showMenu={nav_state.open} />
 	</button>
 </div>
 

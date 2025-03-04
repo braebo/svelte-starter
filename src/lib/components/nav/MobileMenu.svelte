@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { TransitionConfig } from 'svelte/transition'
-	import type { Route } from '$lib/router'
+	import { router, type Route } from '$lib/router'
 
 	import MobileSubMenu from './MobileSubMenu.svelte'
 	import { expoOut, quintOut } from 'svelte/easing'
@@ -8,6 +8,7 @@
 	import { trap } from '$lib/actions/trap'
 	import { page } from '$app/state'
 	import { tick } from 'svelte'
+	import { DEV } from 'esm-env'
 
 	interface Props {
 		links: Route[]
@@ -16,6 +17,8 @@
 	}
 
 	let { links, current, onclose }: Props = $props()
+
+	let depth = $derived((current?.path.split('/')?.length || 0) - 2)
 
 	let show_context_menu = $state(!!current?.children)
 
@@ -30,7 +33,7 @@
 	afterNavigate(onclose)
 
 	$effect(() => {
-		// ensures the menu-background height is applied without an animation
+		// Ensures the menu-background height is applied without an animation.
 		setTimeout(() => {
 			ready = true
 			if (current) {
@@ -48,13 +51,24 @@
 			duration,
 		}
 	}
+
+	let parent = $derived(router.getParent(current?.path))
 </script>
 
+{#if DEV}
+	<span class="depth">{depth}</span>
+	<div>
+		{parent?.title}
+	</div>
+{/if}
+
 {#snippet link(link: Route, active: boolean)}
-	<li class:active>
-		<a href={link.path} class:active={link.path === page.url.pathname}>
+	{@const parent = current?.path.startsWith(link.path)}
+	<li class:active class:parent>
+		<a href={link.path} class:active={link.path === page.url.pathname} class:parent>
 			{link.title}
 		</a>
+
 
 		{#if link.children?.length}
 			<button
@@ -107,9 +121,9 @@
 				if (!target?.classList.contains('viewport')) return
 				if (e.propertyName !== 'transform') return
 
-				// we need to apply a clip-path during the transition so that the contents
+				// We need to apply a clip-path during the transition so that the contents
 				// are constrained to the menu background, but only while the transition
-				// is running, otherwise it prevents the contents from being scrolled
+				// is running, otherwise it prevents the contents from being scrolled.
 				const a = 'calc(var(--height-difference) + 1px)'
 				const b = '1px'
 
@@ -132,13 +146,17 @@
 
 				e.currentTarget.style.clipPath = ''
 
-				// whenever we transition from one menu to the other, we need to move focus to the first item in the new menu
+				// Whenever we transition from one menu to the other, we need to move focus to the first item in the new menu.
 				if (!show_context_menu) {
 					universal_menu?.querySelector('a')?.focus()
 				}
 			}}
 		>
-			<div class="viewport" class:offset={show_context_menu} bind:clientHeight={menu_height}>
+			<div
+				class="viewport"
+				class:offset={show_context_menu && current?.children?.length}
+				bind:clientHeight={menu_height}
+			>
 				<div class="universal" bind:this={universal_menu}>
 					<div class="contents" bind:clientHeight={universal_menu_inner_height} class:current={true}>
 						<ul>
@@ -160,15 +178,22 @@
 					</div>
 				</div>
 
-				<div class="context" inert={!show_context_menu} style:height="{universal_menu_inner_height}px">
-					{#if current}
+				{#if current}
+					<div class="context" inert={!show_context_menu} style:height="{universal_menu_inner_height}px">
 						<ul class="children">
 							{#each current.children ?? [] as child}
 								{@render link(child, current.path.includes(child.path))}
 							{/each}
 						</ul>
-					{/if}
-				</div>
+					</div>
+					<div class="context" inert={!show_context_menu} style:height="{universal_menu_inner_height}px">
+						<ul class="children">
+							{#each current.children ?? [] as child}
+								{@render link(child, current.path.includes(child.path))}
+							{/each}
+						</ul>
+					</div>
+				{/if}
 			</div>
 		</div>
 	</div>
@@ -240,15 +265,21 @@
 		position: relative;
 		bottom: -1px;
 
-		display: grid;
-		grid-template-columns: 50% 50%;
-		grid-auto-rows: 100%;
+		// display: grid;
+		// grid-template-columns: 50% 50%;
+		// grid-auto-rows: 100%;
+		// grid-auto-columns: 50%;
+		// grid-auto-flow: column;
+		display: flex;
 
 		width: 200%;
 		max-width: 200%;
 		height: 100%;
 
 		transition: 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+
+		// DELETEME
+		overflow-x: scroll;
 
 		&.offset {
 			width: 100%;
@@ -275,7 +306,7 @@
 
 		button {
 			background: color-mix(in oklab, var(--bg-b), var(--bg-c) 66%);
-			transform: scaleX(0.8) scaleY(0.6) translate(-0.5rem, 0);
+			transform: scaleX(0.8) scaleY(0.6) translate(0.3rem, 0);
 			&:hover {
 				background: color-mix(in oklab, var(--bg-b), var(--bg-c) 90%);
 			}
@@ -290,25 +321,35 @@
 
 		.icon svg {
 			color: color-mix(in oklab, var(--bg-c), var(--bg-d) 66%);
-			transform: scale(-1, 1.2) translate(0.8rem, 0.2rem);
+			transform: scale(1, 1.2) translate(0.4rem, 0.2rem);
 		}
 		.icon {
 			outline-color: transparent;
 
-			--depth: 74%;
-			--padding: 20%;
+			--depth: 68%;
+			--padding: 5%;
 
 			// prettier-ignore
 			clip-path: polygon(
-				45% -5%,
-				105% -5%,
-				105% var(--padding),
-				var(--depth) 50%,
-				105% calc(105% - var(--padding)),
-				105% 105%,
-				45% 105%,
-				-10% 50%
+				55% -5%,
+				-5% -5%,
+				-5% var(--padding),
+				calc(100% - var(--depth)) 50%,
+				-5% calc(105% - var(--padding)),
+				-5% 105%,
+				55% 105%,
+				105% 50%
 			);
+			// clip-path: polygon(
+			// 	45% -5%,
+			// 	105% -5%,
+			// 	105% var(--padding),
+			// 	var(--depth) 50%,
+			// 	105% calc(105% - var(--padding)),
+			// 	105% 105%,
+			// 	45% 105%,
+			// 	-10% 50%
+			// );
 		}
 	}
 
@@ -348,7 +389,6 @@
 	li a.active,
 	li.active a:active {
 		color: var(--theme-a);
-		// background: color-mix(in oklab, var(--bg-d), var(--fg-d) 50%);
 		background: color-mix(in oklab, var(--bg-b), var(--bg-c) 50%);
 	}
 
@@ -421,5 +461,11 @@
 		margin: 0.5rem 0;
 		height: 2rem;
 		border: none;
+	}
+
+	.parent {
+		a {
+			color: red;
+		}
 	}
 </style>
