@@ -230,14 +230,20 @@
 							{/each}
 						</ul>
 
-						<hr />
+						<!-- <hr /> -->
 
-						<ul>
+						<ul class="socials">
 							<li>
-								<a href="https://bsky.app/profile/braebo.dev">Bluesky</a>
+								<a href="https://github.com/braebo/svelte-starter">
+									<div data-icon="github" aria-label="GitHub Repo"></div>
+									<div class="text">GitHub</div>
+								</a>
 							</li>
 							<li>
-								<a href="https://github.com/braebo/svelte-starter">GitHub</a>
+								<a href="https://bsky.app/profile/braebo.dev">
+									<div data-icon="bluesky" aria-label="braebo on Bluesky"></div>
+									<div class="text">Bluesky</div>
+								</a>
 							</li>
 						</ul>
 					</div>
@@ -296,6 +302,7 @@
 
 <style lang="scss">
 	.menu {
+		view-transition-name: mobile-menu;
 		position: fixed;
 		left: 0px;
 		bottom: var(--bottom, var(--nav-height));
@@ -512,6 +519,8 @@
 		button {
 			background: var(--btn-bg-active);
 			outline: var(--btn-outline-active);
+			// border-radius: var(--radius);
+			// transform: translateX(0);
 		}
 
 		.icon {
@@ -567,12 +576,14 @@
 		}
 	}
 
-	li a:hover {
-		background: var(--link-bg-hover);
-	}
+	@media (hover: hover) {
+		li a:hover {
+			background: var(--link-bg-hover);
+		}
 
-	li.active button:hover {
-		background: var(--btn-bg-hover-active);
+		li.active button:hover {
+			background: var(--btn-bg-hover-active);
+		}
 	}
 
 	.universal {
@@ -581,6 +592,9 @@
 
 	.contents,
 	.context {
+		container-name: col;
+		container-type: inline-size;
+
 		min-width: 50%;
 		height: fit-content;
 		max-height: 70vh;
@@ -635,16 +649,108 @@
 		}
 	}
 
-	hr {
-		margin: 0.5rem 0;
-		height: 2rem;
-		border: none;
-	}
+	// hr {
+	// 	margin: 0.5rem 0;
+	// 	height: 2rem;
+	// 	border: none;
+	// }
 
 	.viewport {
 		&::-webkit-scrollbar {
 			height: 0px;
 			display: none;
+		}
+	}
+
+	ul.socials {
+		// outline: 1px solid rgba(255, 0, 0, 0.2);
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-start;
+		justify-content: center;
+		justify-content: space-around;
+		justify-content: space-between;
+		align-items: flex-end;
+		// width: fit-content;
+		width: 100%;
+		max-width: 100%;
+		flex-shrink: 1;
+		overflow: hidden;
+		height: 5rem;
+		padding: 0;
+		margin: 0;
+
+		li {
+			padding: 0;
+			margin: 0;
+			// min-width: 50%;
+		}
+
+		li a {
+			display: flex;
+			justify-content: flex-start;
+			align-items: center;
+			gap: 0.5rem;
+
+			// height: 100%;
+			max-width: fit-content;
+			height: 4rem;
+			// min-width: 50%;
+			padding: 1rem 1rem 1rem 0.5rem;
+			margin: 0;
+			// padding: 0;
+			background: none;
+
+			&:hover {
+				background: var(--link-bg-hover);
+
+				[data-icon] {
+					background-color: var(--theme-a);
+				}
+			}
+
+			:root.light & {
+				outline: var(--link-outline-active);
+			}
+		}
+
+		[data-icon] {
+			width: 3rem;
+			height: 100%;
+
+			background-color: var(--fg-e);
+
+			mask-repeat: no-repeat;
+			mask-position: 50% 50%;
+			mask-size: calc(100% - 1rem) auto;
+
+			transition: background-color 0.15s;
+
+			&:hover {
+				background-color: var(--theme-a);
+			}
+		}
+
+		[data-icon='bluesky'] {
+			mask-image: url('$lib/icons/bluesky.svg');
+		}
+
+		[data-icon='github'] {
+			width: 3rem;
+			mask-image: url('$lib/icons/github.svg');
+		}
+	}
+
+	// @container col (max-width: 300px) {
+	@container col (max-width: 66cqi) {
+		ul.socials li a {
+			// background: none !important;
+			padding: 1rem 0.5rem;
+		}
+		ul.socials li a .text {
+			outline: 1px solid lime !important;
+			display: none;
+			visibility: hidden;
 		}
 	}
 </style>
