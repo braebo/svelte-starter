@@ -245,11 +245,11 @@
 
 				{#each parts as part, i (part.path)}
 					<div
+						class="context"
+						style="left: {50 + 100 * i}%;"
 						data-index={i}
 						data-path={part.path}
 						use:scroll={i}
-						class="context"
-						style="left: {50 + 100 * i}%;"
 						inert={!show_context_menu}
 						style:height="{universal_menu_inner_height}px"
 					>
@@ -265,15 +265,11 @@
 
 					{#if ready && depth > 1}
 						<button
+							class="back"
+							aria-label="Back"
+							onclick={e => clickLink(e, current!, true)}
 							in:fly|global={{ x: -5, duration: 500, delay: 100, easing: quintOut }}
 							out:fly={{ x: 5, duration: 300, easing: quintOut }}
-							class="back"
-							onclick={e => {
-								// current = undefined
-								// show_context_menu = false
-								// scroll_left.set(0)
-								clickLink(e, current!, true)
-							}}
 						>
 							<svg viewBox="0 0 24 24" width="100%" height="100%" overflow="visible">
 								<path
@@ -285,7 +281,7 @@
 									d="M 9.4 6 l 4.6 4.6 q 0.15 0.15 0.213 0.325 t 0.062 0.375 q 0 0.2 -0.063 0.375 T 14 12 L 9.4 16.4"
 								/>
 							</svg>
-							<!-- <span>Back</span> -->
+							<!-- Back -->
 						</button>
 					{/if}
 				{/each}
@@ -323,6 +319,7 @@
 		--link-bg-active: var(--bg-c);
 		--link-bg-hover: color-mix(in oklab, var(--bg-b), var(--bg-c) 90%);
 		--link-outline: color-mix(in oklab, var(--bg-b), var(--bg-d) 20%);
+		--link-outline-active: var(--link-outline);
 		--link-color: var(--fg-d);
 		--link-color-active: var(--fg-a);
 		--link-color-hover: var(--fg-a);
@@ -330,14 +327,49 @@
 		--btn-bg: color-mix(in oklab, var(--bg-a), var(--bg-b) 25%);
 		--btn-bg-active: var(--bg-a);
 		--btn-outline: 1px solid var(--bg-c);
+		--btn-outline-active: 1px solid var(--bg-c);
 
 		--btn-bg-hover: var(--bg-c);
 		--btn-bg-hover-active: color-mix(in oklab, var(--bg-c), var(--bg-b) 10%);
 
 		--svg-color-active: color-mix(in oklab, var(--bg-c), var(--theme-a) 66%);
 
+		button {
+			box-shadow: var(--shadow-sm);
+		}
+
 		:root.light & {
-			--btn-bg-active: color-mix(in oklab, var(--bg-b), var(--bg-c) 66%);
+			--menu-bg: color-mix(in oklab, var(--bg-a), var(--bg-b) 25%);
+
+			--link-bg: var(--bg-b);
+			--link-bg-active: var(--bg-a);
+			--link-bg-hover: var(--bg-a);
+			--link-outline: none;
+			--link-outline-active: 1px solid var(--bg-b);
+
+			--btn-bg: var(--link-bg);
+			--btn-outline: none;
+			--btn-outline-active: none;
+			--btn-bg-active: color-mix(in oklab, var(--bg-a), var(--bg-b) 25%);
+			--btn-bg-hover: var(--bg-a);
+			--btn-bg-hover-active: var(--bg-b);
+
+			a {
+				font-variation-settings: 'wght' 442;
+				box-shadow: 0 1px 8px rgba(255, 255, 255, calc(var(--shadow-lightness) * 0.3)) inset;
+			}
+
+			button {
+				box-shadow: 0 0 0 rgba(0, 0, 0, calc(var(--shadow-lightness) * 0.4));
+			}
+			li.active button {
+				box-shadow: -1px 2px 4px rgba(0, 0, 0, calc(var(--shadow-lightness) * 0.4));
+			}
+
+			li:hover {
+				--link-bg: var(--bg-b);
+				--link-bg-hover: var(--bg-a);
+			}
 		}
 	}
 
@@ -375,7 +407,6 @@
 		width: 100%;
 		height: 1rem;
 
-		// background: red;
 		background-image: linear-gradient(
 			to bottom,
 			rgba(0, 0, 0, 0),
@@ -430,24 +461,27 @@
 	button,
 	a {
 		pointer-events: auto;
+		outline-offset: -1px;
 	}
 
 	button {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		background: var(--btn-bg);
+		transform: translateX(-1px);
 		gap: 1.5rem;
 
-		width: 4rem;
+		width: calc(4rem + 1px);
 		padding: 0;
 
+		background: var(--btn-bg);
 		outline: var(--btn-outline);
 		border-top-left-radius: 0;
 		border-bottom-left-radius: 0;
 
 		&:hover {
 			background-color: var(--btn-bg-hover);
+			outline: var(--btn-outline);
 		}
 	}
 
@@ -460,8 +494,8 @@
 		height: 4rem;
 		width: 4rem;
 
-		border-radius: var(--radius);
 		background: var(--btn-bg-active);
+		border-radius: var(--radius);
 
 		svg {
 			transform: scale(-0.75, 0.75) translate(0.25rem, 0);
@@ -477,22 +511,15 @@
 	li.active {
 		button {
 			background: var(--btn-bg-active);
+			outline: var(--btn-outline-active);
 		}
 
-		// &:has(button) {
-		// 	a {
-		// 		outline: 1px solid var(--bg-c);
-		// 		background: transparent;
-		// 	}
-		// }
-
 		.icon {
-			outline: 1px solid var(--bg-c);
-
 			svg {
 				color: var(--svg-color-active);
 				transform: scale(1, 0.5) translate(0, 0);
 				transition: 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+
 				path {
 					stroke-width: 2.3;
 				}
@@ -505,10 +532,8 @@
 
 		color: var(--link-color);
 		background: var(--link-bg);
-		outline: 1px solid var(--link-outline) !important;
+		outline: 1px solid var(--link-outline);
 		border-radius: var(--radius);
-		// border-bottom-left-radius: var(--radius);
-		// border-top-left-radius: var(--radius);
 		box-shadow: none;
 
 		font: var(--font-ui-md);
@@ -529,6 +554,7 @@
 
 	li.active a {
 		background: var(--link-bg-active);
+		outline: var(--link-outline-active);
 	}
 
 	li.active:has(button) a {
@@ -545,6 +571,10 @@
 		background: var(--link-bg-hover);
 	}
 
+	li.active button:hover {
+		background: var(--btn-bg-hover-active);
+	}
+
 	.universal {
 		min-width: 50%;
 	}
@@ -556,7 +586,6 @@
 		max-height: 70vh;
 		padding: 1rem;
 
-		// overflow-y: auto;
 		overflow-y: scroll;
 
 		&::-webkit-scrollbar {
