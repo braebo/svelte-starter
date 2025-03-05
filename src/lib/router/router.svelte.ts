@@ -1,8 +1,10 @@
 import type { Route, ExtractPaths, GetRouteByPath } from './router.types'
-import { page, type page as Page } from '$app/state'
+import type { page as Page } from '$app/state'
+import type { Routes } from '../routes'
 
-import { routes, type Routes } from '../routes'
-import { l, r } from '@braebo/ansi'
+import { l, d, r } from '@braebo/ansi'
+import { routes } from '../routes'
+import { page } from '$app/state'
 import { DEV } from 'esm-env'
 
 /**
@@ -95,12 +97,12 @@ export class Router<const T extends Route[] = Routes> {
 		path: P | (string & {}),
 	): GetRouteByPath<typeof this.routes, P> | null {
 		const findRoute = (routes: Route[], targetPath: string): Array<Route>[number] | undefined => {
-			const direct = routes.find(route => route.path === targetPath)
-			if (direct) return direct
+			const found = routes.find(route => route.path === targetPath)
+			if (found) return found
 
 			for (const route of routes) {
 				if ('children' in route && route.children) {
-					const found = route.children.find(child => child.path === targetPath)
+					const found = findRoute(route.children, targetPath)
 					if (found) return found
 				}
 			}
@@ -108,11 +110,23 @@ export class Router<const T extends Route[] = Routes> {
 
 		const found = findRoute(this.routes, path)
 		if (DEV && !found) {
-			// console.error(`Route not found: ${path}`)
-			l(r(`Route not found:`), path)
+			l(r(`Route not found:`), String(path))
+			l(d(`Routes:`), this.routes)
 		}
 
 		return (found as GetRouteByPath<typeof this.routes, P>) ?? null
+	}
+
+	getParent(path: ExtractPaths<typeof this.routes> | (string & {}) = page.url.pathname): Route | null {
+		if (path === '/') return null
+
+		const parts = path.split('/')
+		if (parts.length === 1) return null
+
+		const parent = parts.slice(0, -1).join('/')
+		if (!parent) return null
+
+		return this.get(parent) ?? null
 	}
 
 	/**

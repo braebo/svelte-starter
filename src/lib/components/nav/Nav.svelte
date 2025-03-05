@@ -42,7 +42,7 @@
 
 <style lang="scss">
 	nav {
-		// contain: layout size style;
+		contain: layout size style;
 		view-transition-name: nav;
 
 		position: fixed;
@@ -50,8 +50,6 @@
 		top: 0;
 		left: 0;
 		right: 0;
-
-		// gap: clamp(0rem, 5rem, 1.75vw);
 
 		width: var(--nav-width);
 		height: var(--nav-height);

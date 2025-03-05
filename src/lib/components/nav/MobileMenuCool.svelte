@@ -1,18 +1,14 @@
 <script lang="ts">
-	import { fly, type TransitionConfig } from 'svelte/transition'
+	import type { TransitionConfig } from 'svelte/transition'
 	import { router, type Route } from '$lib/router'
 
-	// import MobileSubMenu from './MobileSubMenu.svelte'
+	import MobileSubMenu from './MobileSubMenu.svelte'
 	import { expoOut, quintOut } from 'svelte/easing'
-	import { Logger } from '$lib/utils/logger/logger'
 	import { afterNavigate } from '$app/navigation'
 	import { trap } from '$lib/actions/trap'
 	import { Tween } from 'svelte/motion'
-	import { gr, r } from '@braebo/ansi'
 	import { page } from '$app/state'
 	import { tick } from 'svelte'
-
-	const log = new Logger('MobileMenu', { fg: 'crimson' })
 
 	interface Props {
 		links: Route[]
@@ -24,13 +20,11 @@
 
 	let show_context_menu = $state(!!current?.children)
 
-	// let nav_context_instance: ReturnType<typeof MobileSubMenu> | undefined = $state()
+	let nav_context_instance: ReturnType<typeof MobileSubMenu> | undefined = $state()
 
 	let universal_menu_inner_height = $state(0)
 	let menu_height = $state(0)
 	let ready = $state(false)
-	let depth = $derived(current?.path.split('/').filter(Boolean).length ?? 0)
-	$inspect('depth', depth)
 
 	let universal_menu: HTMLElement | undefined = $state()
 
@@ -75,7 +69,7 @@
 
 	let scroll_left = new Tween(0, { duration: 500, easing: quintOut })
 	let viewport: HTMLElement | undefined = $state()
-	function scroll(_: any, i: number) {
+	function scroll(_: HTMLElement, i: number) {
 		if (!viewport) return
 
 		if (parts.length > 1) {
@@ -85,63 +79,16 @@
 		}
 	}
 
-	// let scrolled = $state(false)
-	$effect(() => {
-		// if (scrolled === false) {
-		// 	scrolled = true
-		// 	scroll(undefined, 0)
-		// }
-		setTimeout(() => scroll(undefined, 0))
-	})
-
 	$effect(() => {
 		scroll_left.current
 		if (!viewport) return
 		viewport.scrollLeft = scroll_left.current
 	})
-
-	async function clickLink(event: MouseEvent, link: Route, expanded: boolean) {
-		log.group('clickLink', undefined, 5, 'foo', { path: link.path, expanded, __inline__: true })
-
-		event.preventDefault()
-
-		if (expanded) {
-			scroll_left.set(viewport!.scrollLeft, { duration: 0 })
-			if (parts.length > 1) {
-				const parent = parts.at(-2)
-				log.info('UPDATE ' + r('current') + ' to ' + r(parent?.path))
-				current = parent
-				scroll_left.set(0)
-			} else {
-				log.info('UPDATE ' + r('current') + ' to ' + gr('undefined'))
-				current = undefined
-				show_context_menu = false
-				scroll_left.set(0)
-			}
-
-			log.groupEnd()
-			return
-		} else {
-			log.info('UPDATE ' + r('current') + ' to ' + r(link.path))
-		}
-
-		current = link
-
-		await tick()
-
-		show_context_menu = true
-
-		await tick()
-
-		// nav_context_instance?.scrollToActive()
-		log.groupEnd()
-	}
 </script>
 
 {#snippet link(link: Route, active: boolean)}
 	{@const parent = current?.path.startsWith(link.path)}
 	{@const noteworthy = active && (link.path === page.url.pathname || (parent && link.path !== '/'))}
-	{@const expanded = current?.path.includes(link.path)}
 	<li class:active={noteworthy}>
 		<a href={link.path} class:active={noteworthy}>
 			{link.title}
@@ -150,7 +97,33 @@
 		{#if link.children?.length}
 			<button
 				class="raised icon"
-				onclick={e => clickLink(e, link, !!expanded)}
+				onclick={async event => {
+					event.preventDefault()
+
+					if (current?.path.includes(link.path)) {
+						scroll_left.set(viewport!.scrollLeft, { duration: 0 })
+						if (parts.length > 1) {
+							current = parts.at(-2)
+							scroll_left.set(0)
+						} else {
+							current = undefined
+							show_context_menu = false
+							scroll_left.set(0)
+						}
+
+						return
+					}
+
+					current = link
+
+					await tick()
+
+					show_context_menu = true
+
+					await tick()
+
+					nav_context_instance?.scrollToActive()
+				}}
 				aria-label="Show {link.title} submenu"
 			>
 				<svg viewBox="0 0 24 24" width="100%" height="100%" overflow="visible">
@@ -160,10 +133,7 @@
 						stroke-width="1"
 						stroke-linecap="round"
 						stroke-linejoin="round"
-						class="morph-path"
-						d={expanded
-							? 'M 9.4 10.6 l 4.6 0 q 0.15 0.15 0.213 0.325 t 0.062 0.375 q 0 0.2 -0.063 0.375 T 14 12 L 9.4 11.8'
-							: 'M 9.4 6 l 4.6 4.6 q 0.15 0.15 0.213 0.325 t 0.062 0.375 q 0 0.2 -0.063 0.375 T 14 12 L 9.4 16.4'}
+						d="M9.4 6l4.6 4.6q.15.15.213.325t.062.375q0 .2-.063.375t-.212.325L9.4 16.4"
 					/>
 				</svg>
 			</button>
@@ -262,32 +232,6 @@
 							{/each}
 						</ul>
 					</div>
-
-					{#if ready && depth > 1}
-						<button
-							in:fly|global={{ x: -5, duration: 500, delay: 100, easing: quintOut }}
-							out:fly={{ x: 5, duration: 300, easing: quintOut }}
-							class="back"
-							onclick={e => {
-								// current = undefined
-								// show_context_menu = false
-								// scroll_left.set(0)
-								clickLink(e, current!, true)
-							}}
-						>
-							<svg viewBox="0 0 24 24" width="100%" height="100%" overflow="visible">
-								<path
-									fill="none"
-									stroke="currentColor"
-									stroke-width="1"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									d="M 9.4 6 l 4.6 4.6 q 0.15 0.15 0.213 0.325 t 0.062 0.375 q 0 0.2 -0.063 0.375 T 14 12 L 9.4 16.4"
-								/>
-							</svg>
-							<!-- <span>Back</span> -->
-						</button>
-					{/if}
 				{/each}
 
 				{#if parts.length === 1}
@@ -328,17 +272,16 @@
 		--link-color-hover: var(--fg-a);
 
 		--btn-bg: color-mix(in oklab, var(--bg-a), var(--bg-b) 25%);
-		--btn-bg-active: var(--bg-a);
+		--btn-bg-active: var(--bg-c);
+		:root.light & {
+			--btn-bg-active: color-mix(in oklab, var(--bg-b), var(--bg-c) 66%);
+		}
 		--btn-outline: 1px solid var(--bg-c);
 
 		--btn-bg-hover: var(--bg-c);
 		--btn-bg-hover-active: color-mix(in oklab, var(--bg-c), var(--bg-b) 10%);
 
 		--svg-color-active: color-mix(in oklab, var(--bg-c), var(--theme-a) 66%);
-
-		:root.light & {
-			--btn-bg-active: color-mix(in oklab, var(--bg-b), var(--bg-c) 66%);
-		}
 	}
 
 	.menu-background {
@@ -419,17 +362,55 @@
 		}
 	}
 
-	.morph-path {
-		transition: d 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-	}
-
 	.pad {
 		min-width: 50%;
 	}
 
-	button,
-	a {
-		pointer-events: auto;
+	li .icon :global(svg) {
+		transform-origin: center;
+		transform: scale(0.75) translate(0, 0);
+		transition: 1s cubic-bezier(0.23, 1, 0.32, 1);
+	}
+
+	li.active {
+		button {
+			transform: scaleX(0.8) scaleY(0.6) translate(0.3rem, 0);
+
+			background: var(--btn-bg-active);
+			&:hover {
+				background: var(--btn-bg-hover-active);
+			}
+		}
+
+		&:has(button) {
+			a {
+				outline-color: transparent !important;
+				background: transparent;
+			}
+		}
+
+		.icon svg {
+			color: var(--svg-color-active);
+			transform: scale(1, 1.2) translate(0.4rem, 0.2rem);
+		}
+		.icon {
+			outline-color: transparent;
+
+			--depth: 68%;
+			--padding: 5%;
+
+			// prettier-ignore
+			clip-path: polygon(
+				55% -5%,
+				-5% -5%,
+				-5% var(--padding),
+				calc(100% - var(--depth)) 50%,
+				-5% calc(105% - var(--padding)),
+				-5% 105%,
+				55% 105%,
+				105% 50%
+			);
+		}
 	}
 
 	button {
@@ -438,78 +419,17 @@
 		justify-content: center;
 		background: var(--btn-bg);
 		gap: 1.5rem;
-
-		width: 4rem;
-		padding: 0;
-
-		outline: var(--btn-outline);
-		border-top-left-radius: 0;
-		border-bottom-left-radius: 0;
-
-		&:hover {
-			background-color: var(--btn-bg-hover);
-		}
-	}
-
-	button.back {
-		position: absolute;
-		left: calc(50% + var(--padding));
-		bottom: var(--padding);
-		gap: 0;
-
-		height: 4rem;
-		width: 4rem;
-
-		border-radius: var(--radius);
-		background: var(--btn-bg-active);
-
-		svg {
-			transform: scale(-0.75, 0.75) translate(0.25rem, 0);
-		}
-	}
-
-	li .icon svg {
-		transform-origin: center;
-		transform: scale(0.75) translate(0, 0);
-		transition: 1s cubic-bezier(0.23, 1, 0.32, 1);
-	}
-
-	li.active {
-		button {
-			background: var(--btn-bg-active);
-		}
-
-		// &:has(button) {
-		// 	a {
-		// 		outline: 1px solid var(--bg-c);
-		// 		background: transparent;
-		// 	}
-		// }
-
-		.icon {
-			outline: 1px solid var(--bg-c);
-
-			svg {
-				color: var(--svg-color-active);
-				transform: scale(1, 0.5) translate(0, 0);
-				transition: 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-				path {
-					stroke-width: 2.3;
-				}
-			}
-		}
 	}
 
 	li a {
+		// padding: 1rem 2rem;
 		padding: 1rem 1.25rem;
 
 		color: var(--link-color);
+		box-shadow: none;
+		border-radius: var(--radius);
 		background: var(--link-bg);
 		outline: 1px solid var(--link-outline) !important;
-		border-radius: var(--radius);
-		// border-bottom-left-radius: var(--radius);
-		// border-top-left-radius: var(--radius);
-		box-shadow: none;
 
 		font: var(--font-ui-md);
 
@@ -522,19 +442,6 @@
 		}
 	}
 
-	li:has(button) a {
-		border-top-right-radius: 0;
-		border-bottom-right-radius: 0;
-	}
-
-	li.active a {
-		background: var(--link-bg-active);
-	}
-
-	li.active:has(button) a {
-		max-width: calc(100% - 2rem);
-	}
-
 	.context {
 		li a {
 			color: var(--link-color-active);
@@ -543,6 +450,18 @@
 
 	li a:hover {
 		background: var(--link-bg-hover);
+	}
+
+	li.active:has(button) a {
+		max-width: calc(100% - 2rem);
+		margin-right: 2rem;
+
+		background: var(--link-bg-active);
+	}
+
+	li:has(button):not(.active) a {
+		border-top-right-radius: 0;
+		border-bottom-right-radius: 0;
 	}
 
 	.universal {
@@ -574,6 +493,19 @@
 		&::-webkit-scrollbar-track {
 			background: var(--bg-a);
 			background: transparent;
+		}
+	}
+
+	button {
+		padding: 0;
+		width: 4rem;
+		outline: var(--btn-outline);
+
+		border-top-left-radius: 0;
+		border-bottom-left-radius: 0;
+
+		&:hover {
+			background-color: var(--btn-bg-hover);
 		}
 	}
 

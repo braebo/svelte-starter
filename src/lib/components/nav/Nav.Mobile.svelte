@@ -7,10 +7,15 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 	import ThemeSwitch from '$lib/components/ThemeSwitch.svelte'
 	import Burger from '../header/navs/Mobile/Burger.svelte'
+	// import MobileMenuCool from './MobileMenuCool.svelte'
+	import { Logger } from '$lib/utils/logger/logger'
 	import { nav_state } from './nav_state.svelte'
 	import MobileMenu from './MobileMenu.svelte'
 	import { tick, untrack } from 'svelte'
 	import { page } from '$app/state'
+	import { r } from '@braebo/ansi'
+
+	const log = new Logger('Nav.Mobile', { fg: 'tomato' })
 
 	let {
 		links,
@@ -24,42 +29,37 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	let menu_button: HTMLButtonElement | undefined
 
 	$effect(() => {
+		log.group('$effect')
+		log.info((nav_state.open ? 'disabling' : 'enabling') + ' root scroll')
 		if (nav_state.open) {
-			// Disable root from scrolling
+			// Disable root from scrolling.
 			document.documentElement.style.overflow = 'hidden'
 			document.documentElement.style.scrollbarGutter = 'stable'
 			document.body.style.overflow = 'hidden'
-			// const route = router.get('/' + page.url.pathname.split('/')[1])
-			// if (route) current = route
-			// current = router.current
-			// untrack(() => {
-			// 	console.log({ links: $state.snapshot(links) })
-			// 	console.log({ current: $state.snapshot(current) })
-			// })
 
-			// const r1 = page.url.pathname.split('/').slice(0, -1).join('/')
-			// console.log('r1', r1)
-			// const r2 = router.get(r1)
-			// console.log('r2', r2)
+			// Move up 1 level for deeper routes.
 			if (page.url.pathname.split('/').length > 1) {
-				const route = router.getParent(router.current?.path ?? '/')
-				console.log('route', route)
-				if (route) current = route
+				const parent = router.getParent(router.current?.path ?? '/')
+				if (parent) {
+					log.info(`UPDATE ${r('current')}:`, parent)
+					current = parent
+				}
 			}
 		} else {
-			// Enable root to scroll
+			// Enable root to scroll.
 			document.documentElement.style.overflow = ''
 			document.documentElement.style.scrollbarGutter = ''
 			document.body.style.overflow = ''
 		}
+		log.groupEnd()
 	})
 </script>
 
 <svelte:window
 	onkeydown={e => {
+		// We only manage focus when Esc is hit, otherwise the navigation will reset focus.
 		if (nav_state.open && e.key === 'Escape') {
 			nav_state.open = false
-			// We only manage focus when Esc is hit otherwise, the navigation will reset focus.
 			tick().then(() => menu_button?.focus())
 		}
 	}}
@@ -84,8 +84,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			nav_state.open = !nav_state.open
 
 			if (nav_state.open) {
-				const segment = page.url.pathname.split('/')[1]
-				current = links.find(link => link.title === segment)
+				current = router.current
 			}
 		}}
 	>
@@ -97,6 +96,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 {#if nav_state.open}
 	<div class="mobile">
 		<MobileMenu {links} {current} onclose={() => (nav_state.open = false)} />
+		<!-- <MobileMenuCool {links} {current} onclose={() => (nav_state.open = false)} /> -->
 	</div>
 {/if}
 
@@ -107,7 +107,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		justify-content: end;
 		align-items: center;
 		gap: calc(var(--padding) * 2);
-		
+
 		z-index: 100;
 	}
 
