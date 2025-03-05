@@ -1,8 +1,8 @@
 import type { CSSColorName } from './css-colors.ts'
 
+import { r, y, gr, d, paint_primitive, paint_object, CLEAR } from '@braebo/ansi'
 import { CSS_COLORS, randomCSSColorName } from './css-colors'
 import { stringify } from '$lib/utils/stringify'
-import { r, y, gr, d } from '@braebo/ansi'
 import { hex } from './logger-colors.js'
 import { defer } from '$lib/utils/defer'
 import { tldr } from '$lib/utils/tldr'
@@ -221,12 +221,23 @@ export class Logger {
 
 		this.#group = newGroup
 
+		let open = '('
+		if (!args?.length) {
+			open = gr('(')
+		}
+		let close = ')'
+		if (!args?.length) {
+			close = gr(')')
+		}
+
 		if (options?.parens ?? true) {
 			title =
 				title +
-				gr('(') +
-				args.map(a => gr(typeof a === 'object' ? stringify(a) : String(a))).join(', ') +
-				gr(')')
+				CLEAR +
+				open +
+				args.map(a => (typeof a === 'object' ? paint_object(a) : paint_primitive(a))).join(gr(', ')) +
+				CLEAR +
+				close
 		}
 		if (options?.fg ?? true) {
 			title = this.color(title)
