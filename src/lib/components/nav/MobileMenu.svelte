@@ -2,7 +2,6 @@
 	import { fly, type TransitionConfig } from 'svelte/transition'
 	import { router, type Route } from '$lib/router'
 
-	// import MobileSubMenu from './MobileSubMenu.svelte'
 	import { expoOut, quintOut } from 'svelte/easing'
 	import { Logger } from '$lib/utils/logger/logger'
 	import { afterNavigate } from '$app/navigation'
@@ -24,8 +23,6 @@
 
 	let show_context_menu = $state(!!current?.children)
 
-	// let nav_context_instance: ReturnType<typeof MobileSubMenu> | undefined = $state()
-
 	let universal_menu_inner_height = $state(0)
 	let menu_height = $state(0)
 	let ready = $state(false)
@@ -40,9 +37,8 @@
 		// Ensures the menu-background height is applied without an animation.
 		setTimeout(() => {
 			ready = true
-			if (current) {
-				show_context_menu = !!current?.children
-			}
+			if (current) show_context_menu = !!current?.children
+			scroll(undefined, 0)
 		})
 	})
 
@@ -84,15 +80,6 @@
 			scroll_left.set(target.offsetLeft)
 		}
 	}
-
-	// let scrolled = $state(false)
-	$effect(() => {
-		// if (scrolled === false) {
-		// 	scrolled = true
-		// 	scroll(undefined, 0)
-		// }
-		setTimeout(() => scroll(undefined, 0))
-	})
 
 	$effect(() => {
 		scroll_left.current
@@ -229,8 +216,6 @@
 								{@render link(l, !!current?.path.includes(l.path))}
 							{/each}
 						</ul>
-
-						<!-- <hr /> -->
 
 						<ul class="socials">
 							<li>
