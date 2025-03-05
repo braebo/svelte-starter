@@ -88,7 +88,7 @@
 	})
 
 	async function clickLink(event: MouseEvent, link: Route, expanded: boolean) {
-		log.group('clickLink', undefined, 5, 'foo', { path: link.path, expanded, __inline__: true })
+		log.group('clickLink', undefined, { path: link.path, expanded, __inline__: true })
 
 		event.preventDefault()
 
@@ -272,7 +272,6 @@
 									d="M 9.4 6 l 4.6 4.6 q 0.15 0.15 0.213 0.325 t 0.062 0.375 q 0 0.2 -0.063 0.375 T 14 12 L 9.4 16.4"
 								/>
 							</svg>
-							<!-- Back -->
 						</button>
 					{/if}
 				{/each}
@@ -504,8 +503,6 @@
 		button {
 			background: var(--btn-bg-active);
 			outline: var(--btn-outline-active);
-			// border-radius: var(--radius);
-			// transform: translateX(0);
 		}
 
 		.icon {
@@ -634,12 +631,6 @@
 		}
 	}
 
-	// hr {
-	// 	margin: 0.5rem 0;
-	// 	height: 2rem;
-	// 	border: none;
-	// }
-
 	.viewport {
 		&::-webkit-scrollbar {
 			height: 0px;
@@ -648,7 +639,6 @@
 	}
 
 	ul.socials {
-		// outline: 1px solid rgba(255, 0, 0, 0.2);
 		display: flex;
 		flex-direction: row;
 		justify-content: flex-start;
@@ -656,7 +646,6 @@
 		justify-content: space-around;
 		justify-content: space-between;
 		align-items: flex-end;
-		// width: fit-content;
 		width: 100%;
 		max-width: 100%;
 		flex-shrink: 1;
@@ -668,7 +657,6 @@
 		li {
 			padding: 0;
 			margin: 0;
-			// min-width: 50%;
 		}
 
 		li a {
@@ -677,13 +665,10 @@
 			align-items: center;
 			gap: 0.5rem;
 
-			// height: 100%;
 			max-width: fit-content;
 			height: 4rem;
-			// min-width: 50%;
 			padding: 1rem 1rem 1rem 0.5rem;
 			margin: 0;
-			// padding: 0;
 			background: none;
 
 			&:hover {
