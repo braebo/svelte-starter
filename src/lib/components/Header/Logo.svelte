@@ -44,8 +44,8 @@
 	.logo {
 		position: relative;
 		display: flex;
-
 		aspect-ratio: 1;
+
 		width: var(--width);
 		max-width: var(--max-width);
 		height: fit-content;
