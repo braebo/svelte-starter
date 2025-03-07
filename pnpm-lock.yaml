@@ -4,17 +4,13 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-overrides:
-  '@braebo/ansi': link:../../packages/ansi
-
 importers:
 
   .:
-    dependencies:
-      '@braebo/ansi':
-        specifier: link:../../packages/ansi
-        version: link:../../packages/ansi
     devDependencies:
+      '@braebo/ansi':
+        specifier: ^0.1.0
+        version: 0.1.0
       '@playwright/test':
         specifier: 1.50.1
         version: 1.50.1
@@ -114,6 +110,9 @@ packages:
   '@ampproject/remapping@2.3.0':
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
     engines: {node: '>=6.0.0'}
+
+  '@braebo/ansi@0.1.0':
+    resolution: {integrity: sha512-2yZjwmpDrbjwo5FJLTP/+2bwHw3t+ZZeJKGQavUsPUMHAAnmWbzApPaPNO7axMpJVGFyZbJ94j8ZbwBznOQo2A==}
 
   '@bufbuild/protobuf@2.2.3':
     resolution: {integrity: sha512-tFQoXHJdkEOSwj5tRIZSPNUuXK3RaR7T1nUrPgbYX1pUbvqqaaZAsfo+NXBPsz5rZMSKVFrgK1WL8Q/MSLvprg==}
@@ -1802,6 +1801,8 @@ snapshots:
     dependencies:
       '@jridgewell/gen-mapping': 0.3.8
       '@jridgewell/trace-mapping': 0.3.25
+
+  '@braebo/ansi@0.1.0': {}
 
   '@bufbuild/protobuf@2.2.3': {}
 

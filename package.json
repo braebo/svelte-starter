@@ -25,6 +25,7 @@
 		"test:e2e": "playwright test"
 	},
 	"devDependencies": {
+		"@braebo/ansi": "^0.1.0",
 		"@playwright/test": "1.50.1",
 		"@samplekit/preprocess-shiki": "^3.0.0",
 		"@sveltejs/adapter-auto": "^4.0.0",
@@ -56,13 +57,5 @@
 		"typescript": "^5.8.2",
 		"vite": "^6.2.0",
 		"vitest": "^3.0.7"
-	},
-	"pnpm": {
-		"overrides": {
-			"@braebo/ansi": "link:../../packages/ansi"
-		}
-	},
-	"dependencies": {
-		"@braebo/ansi": "link:../../packages/ansi"
 	}
 }

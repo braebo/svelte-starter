@@ -1,6 +1,6 @@
 import type { CSSColorName } from './css-colors.ts'
 
-import { r, y, gr, d, paint_primitive, paint_object, CLEAR } from '@braebo/ansi'
+import { r, y, gr, d, paint, CLEAR } from '@braebo/ansi'
 import { CSS_COLORS, randomCSSColorName } from './css-colors'
 import { stringify } from '$lib/utils/stringify'
 import { hex } from './logger-colors.js'
@@ -235,7 +235,7 @@ export class Logger {
 				title +
 				CLEAR +
 				open +
-				args.map(a => (typeof a === 'object' ? paint_object(a) : paint_primitive(a))).join(gr(', ')) +
+				args.map(a => paint(a)).join(gr(', ')) +
 				CLEAR +
 				close
 		}
