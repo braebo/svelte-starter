@@ -26,7 +26,16 @@ const config = {
 		vitePreprocess({ script: true }),
 		mdsvex(mdsvexConfig),
 	],
-	kit: { adapter: adapter() },
+	kit: {
+		adapter: adapter(),
+		// prerender: {
+		// 	handleHttpError: ({ path, message }) => {
+		// 		if (path === '/404') return
+
+		// 		throw new Error(message)
+		// 	},
+		// },
+	},
 	vitePlugin: {
 		inspector: {
 			toggleButtonPos: 'bottom-left',
