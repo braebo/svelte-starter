@@ -60,8 +60,7 @@ export interface LoggerOptions {
 	level: keyof typeof LOG_LEVELS
 }
 
-// todo - How can we ensure the logger is stripped _completely_ from production builds?
-const ENABLED = true
+const ENABLED = DEV
 
 const LOG_LEVELS = {
 	debug: 1,
@@ -231,13 +230,7 @@ export class Logger {
 		}
 
 		if (options?.parens ?? true) {
-			title =
-				title +
-				CLEAR +
-				open +
-				args.map(a => paint(a)).join(gr(', ')) +
-				CLEAR +
-				close
+			title = title + CLEAR + open + args.map(a => paint(a)).join(gr(', ')) + CLEAR + close
 		}
 		if (options?.fg ?? true) {
 			title = this.color(title)

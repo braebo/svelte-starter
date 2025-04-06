@@ -1,7 +1,7 @@
 /// <reference types="bun-types" />
 
-import { l, g, d, err } from '../src/lib/utils/logger/logettes'
 import { chromium, type Browser } from '@playwright/test'
+import { l, g, d, err } from '@braebo/ansi'
 import { Spinner } from './lib/spinner'
 import { Cli } from './lib/cli'
 import { resolve } from 'path'

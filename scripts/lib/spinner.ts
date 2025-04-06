@@ -1,4 +1,4 @@
-import { d, o, err } from '../../src/lib/utils/logger/logettes'
+import { d, o, err } from '@braebo/ansi'
 import { stdout } from 'node:process'
 
 export class Spinner {
